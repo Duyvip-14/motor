@@ -1,0 +1,16 @@
+# Bỏ qua thư mục của Node.js (Frontend)
+**/node_modules/
+build/
+dist/
+.env
+
+# Bỏ qua thư mục của .NET/C# (Backend)
+**/bin/
+**/obj/
+**/.vs/
+*.user
+appsettings.Development.json
+
+# Bỏ qua file rác của hệ điều hành
+.DS_Store
+Thumbs.db
