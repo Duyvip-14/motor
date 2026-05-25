@@ -17,6 +17,9 @@ import Login from './pages/login/Login';
 import { UserProvider } from './until/userContext';
 import ChatAIApp from './components/Messages/chat';
 import VnpayReturn from './pages/cart/Vnpay';
+import InfoPage from './pages/info/InfoPage';
+import Service from './pages/info/Service';
+import CareShare from './pages/info/CareShare';
 
 export default function App() {
   
@@ -38,6 +41,9 @@ export default function App() {
         <Route path='/donhang' element={<Odercart/>}/>
         <Route path="/chatai" element={<ChatAIApp/>} />
         <Route path="/vnpay-return" element={<VnpayReturn />} />
+        <Route path="/info/:topic" element={<InfoPage />} />
+        <Route path="/service" element={<Service />} />
+        <Route path="/care-and-share" element={<CareShare />} />
         </Routes>
       <Message/>
       <Buycoolmate/>

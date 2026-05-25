@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useUser } from '../../until/userContext';
 import { LoadData } from '../../until/cartactive';
@@ -6,6 +6,9 @@ import { LoadData } from '../../until/cartactive';
 export default function Navbar() {
     const { user, logoutUser } = useUser();
     const navigate = useNavigate();
+    const [searchOpen, setSearchOpen] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+
     const handleLogout = () => {
         logoutUser();
         navigate('/');
@@ -14,6 +17,15 @@ export default function Navbar() {
             localStorage.setItem("cart", JSON.stringify(list));
             LoadData();
       };
+
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        const keyword = searchTerm.trim();
+        if (!keyword) return;
+        navigate(`/product?keyword=${encodeURIComponent(keyword)}`);
+        setSearchOpen(false);
+        setSearchTerm('');
+    };
   return (
 
       <Fragment>
@@ -96,10 +108,68 @@ export default function Navbar() {
                 </div>
 
                 <div className="header__actions">
-                    <div className="header__actions-search">
-                        <a className="header__actions-link">
+                    <div className="header__actions-search" style={{ position: 'relative' }}>
+                        <a
+                            className="header__actions-link"
+                            onClick={() => setSearchOpen(prev => !prev)}
+                            style={{ cursor: 'pointer' }}
+                        >
                             <i className="fa-solid fa-magnifying-glass fa-xl"></i>
                         </a>
+                        {searchOpen && (
+                            <div
+                                style={{
+                                    position: 'absolute',
+                                    top: 'calc(100% + 12px)',
+                                    right: 0,
+                                    width: '320px',
+                                    background: '#fff',
+                                    border: '1px solid #e1e1e1',
+                                    borderRadius: '12px',
+                                    boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+                                    padding: '10px',
+                                    zIndex: 1000
+                                }}
+                            >
+                                <form
+                                    onSubmit={handleSearchSubmit}
+                                    style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+                                >
+                                    <input
+                                        type="text"
+                                        placeholder="Tìm kiếm sản phẩm..."
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        autoFocus
+                                        style={{
+                                            flex: 1,
+                                            border: '1px solid #e1e1e1',
+                                            borderRadius: '8px',
+                                            padding: '8px 12px',
+                                            fontSize: '14px',
+                                            outline: 'none'
+                                        }}
+                                    />
+                                    <button
+                                        type="submit"
+                                        style={{
+                                            background: '#000',
+                                            color: '#fff',
+                                            border: 'none',
+                                            borderRadius: '8px',
+                                            padding: '8px 12px',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center'
+                                        }}
+                                        aria-label="Tìm kiếm"
+                                    >
+                                        <i className="fa-solid fa-magnifying-glass"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        )}
                     </div>
                     <div className="header__actions-account">
                     <Link to="/DangNhap" className="header__actions-link">
@@ -138,7 +208,7 @@ export default function Navbar() {
                             <div className="mini-cart">
                                 <div className="mini-cart-head">
                                     <span><span className="added-product"></span>  sản phẩm</span>
-                                    <a href="Cart-page.html">Xem tất cả</a>
+                                    <Link to="/cart">Xem tất cả</Link>
                                 </div>
                                 <ul className="mini-cart__list">
                                     
@@ -149,12 +219,6 @@ export default function Navbar() {
 
                     </div>
 
-                </div>
-            </div>
-            <div className="search" style= {{ display: 'none'}}>
-                <div className="search__inner">
-                    <input placeholder="Tìm kiếm sản phẩm..." className="search__input" type="text"/>
-                    <img className="search__img" style= {{width: '20px'}}  src="/Images/icon-search.svg" alt=""/>
                 </div>
             </div>
         </div>

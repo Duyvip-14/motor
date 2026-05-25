@@ -1,0 +1,187 @@
+/* ============================================
+   Global Responsive Wrapper - Admin
+   ============================================ */
+
+html {
+  box-sizing: border-box;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  overflow-x: hidden;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.app {
+  width: 100%;
+  min-height: 100vh;
+}
+
+#wrapper {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+#content-wrapper {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+#content {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.container-fluid {
+  width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* Bảng dữ liệu cuộn ngang trên màn hình hẹp */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table {
+  width: 100%;
+  min-width: 600px;
+}
+
+/* Form fields không tràn */
+input,
+select,
+textarea,
+button {
+  max-width: 100%;
+}
+
+.form-control {
+  width: 100%;
+}
+
+/* Card / row tự xuống dòng */
+.row {
+  flex-wrap: wrap;
+}
+
+/* Sidebar responsive */
+@media (max-width: 1200px) {
+  .sidebar {
+    width: 6.5rem !important;
+  }
+  .sidebar .nav-item .nav-link span {
+    display: none;
+  }
+  .sidebar-brand-text {
+    display: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 0 !important;
+    overflow: hidden;
+  }
+
+  #content-wrapper {
+    width: 100%;
+  }
+
+  .navbar-search {
+    display: none !important;
+  }
+
+  .col {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .card-body {
+    padding: 0.75rem;
+  }
+
+  .h3,
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  .btn {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .pagination .page-link {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .container-fluid {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 0.5rem;
+  }
+
+  .card-header .btn {
+    width: 100%;
+  }
+
+  table {
+    font-size: 0.8rem;
+  }
+
+  table th,
+  table td {
+    padding: 0.4rem !important;
+  }
+
+  table img {
+    width: 40px !important;
+    height: 40px !important;
+  }
+}
+
+/* Thống kê cards */
+@media (max-width: 992px) {
+  .col-xl-3.col-md-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+
+@media (max-width: 576px) {
+  .col-xl-3.col-md-6 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}

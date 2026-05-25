@@ -1,0 +1,21 @@
+{
+  "name": "webmotor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "WebMotor - chạy 3 service cùng lúc (Backend + Admin + Client) bằng npm",
+  "scripts": {
+    "install:all": "npm install && npm --prefix BackEnd/server install && npm --prefix admin install && npm --prefix client install",
+    "db:setup": "mysql -h localhost -u root -pduyvip123@ < scripts/setup-db.sql",
+    "db:seed": "mysql -h localhost -u root -pduyvip123@ motor < docker/init/01-schema.sql && mysql -h localhost -u root -pduyvip123@ motor < docker/init/02-seed.sql && mysql -h localhost -u root -pduyvip123@ motor < docker/init/03-product-data.sql && mysql -h localhost -u root -pduyvip123@ motor < docker/init/04-touring.sql && mysql -h localhost -u root -pduyvip123@ motor < docker/init/05-adventure.sql && mysql -h localhost -u root -pduyvip123@ motor < docker/init/06-classic.sql && mysql -h localhost -u root -pduyvip123@ motor < docker/init/07-accessories.sql",
+    "db:reset": "npm run db:setup && npm run db:seed",
+    "server": "npm --prefix BackEnd/server run server",
+    "admin": "npm --prefix admin start",
+    "client": "cross-env PORT=3001 npm --prefix client start",
+    "dev": "concurrently -k -n SERVER,ADMIN,CLIENT -c yellow,cyan,green \"npm:server\" \"npm:admin\" \"npm:client\"",
+    "start": "npm run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3"
+  }
+}

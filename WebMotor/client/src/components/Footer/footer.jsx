@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function Footer() {
   return (
@@ -8,50 +9,50 @@ export default function Footer() {
         <div className="footer-top">
             <div className="footer-top-left">
                 <ul>
-                    <li className="footer-top-left__heading"><a href="">Khám phá Thế Giới Mô Tô</a></li>
-                    <li><a href="">Xe mô tô thể thao</a></li>
-                    <li><a href="">Xe mô tô touring</a></li>
-                    <li><a href="">Xe mô tô địa hình</a></li>
-                    <li><a href="">Xe mô tô classic</a></li>
-                    <li><a href="">Phụ kiện mô tô</a></li>
-                    <li><a href="">Trang phục bảo hộ</a></li>
-                    <li><a href="">Dịch vụ bảo dưỡng</a></li>
-                    <li><a href="">Cộng đồng biker</a></li>
+                    <li className="footer-top-left__heading"><Link to="/product">Khám phá Thế Giới Mô Tô</Link></li>
+                    <li><Link to="/product?keyword=sport">Xe mô tô thể thao</Link></li>
+                    <li><Link to="/product?keyword=touring">Xe mô tô touring</Link></li>
+                    <li><Link to="/product?keyword=địa hình">Xe mô tô địa hình</Link></li>
+                    <li><Link to="/product?keyword=classic">Xe mô tô classic</Link></li>
+                    <li><Link to="/product?keyword=Phụ kiện">Phụ kiện mô tô</Link></li>
+                    <li><Link to="/chonsize">Trang phục bảo hộ</Link></li>
+                    <li><Link to="/info/baoduong">Dịch vụ bảo dưỡng</Link></li>
+                    <li><Link to="/info/community">Cộng đồng biker</Link></li>
                 </ul>
                 <ul>
-                    <li className="footer-top-left__heading"><a href="">Dịch vụ khách hàng</a></li>
-                    <li><a href="">Hỏi đáp - FAQs</a></li>
-                    <li><a href="">Chính sách đổi trả 60 ngày</a></li>
-                    <li><a href="">Liên hệ hỗ trợ</a></li>
-                    <li><a href="">Dịch vụ bảo dưỡng xe</a></li>
-                    <li><a href="">Ưu đãi dành cho biker</a></li>
-                    <li><a href="">Chính sách vận chuyển</a></li>
-                    <li><a href="">Chính sách bảo mật</a></li>
-                    <li><a href="">Chính sách bảo mật thanh toán</a></li>
-                    <li className="footer-top-left__heading mg-top30"><a href="">Kiến thức mô tô</a></li>
-                    <li><a href="">Hướng dẫn chọn xe</a></li>
-                    <li><a href="">Blog về mô tô</a></li>
-                    <li><a href="">Cộng đồng yêu thích mô tô</a></li>
+                    <li className="footer-top-left__heading"><Link to="/info/contact">Dịch vụ khách hàng</Link></li>
+                    <li><Link to="/info/faq">Hỏi đáp - FAQs</Link></li>
+                    <li><Link to="/info/policy">Chính sách đổi trả 60 ngày</Link></li>
+                    <li><Link to="/info/contact">Liên hệ hỗ trợ</Link></li>
+                    <li><Link to="/info/baoduong">Dịch vụ bảo dưỡng xe</Link></li>
+                    <li><Link to="/info/uudai">Ưu đãi dành cho biker</Link></li>
+                    <li><Link to="/info/policy">Chính sách vận chuyển</Link></li>
+                    <li><Link to="/info/policy">Chính sách bảo mật</Link></li>
+                    <li><Link to="/info/policy">Chính sách bảo mật thanh toán</Link></li>
+                    <li className="footer-top-left__heading mg-top30"><Link to="/info/huongdan">Kiến thức mô tô</Link></li>
+                    <li><Link to="/info/huongdan">Hướng dẫn chọn xe</Link></li>
+                    <li><Link to="/info/blog">Blog về mô tô</Link></li>
+                    <li><Link to="/info/community">Cộng đồng yêu thích mô tô</Link></li>
                 </ul>
                 <ul>
-                    <li className="footer-top-left__heading"><a href="">Tài liệu - Tuyển dụng</a></li>
-                    <li><a href="">Hướng dẫn đăng ký xe</a></li>
-                    <li><a href="">Tuyển dụng</a></li>
-                    <li className="footer-top-left__heading mg-top30"><a href="">Về Chúng Tôi</a></li>
-                    <li><a href="">Câu chuyện thương hiệu</a></li>
-                    <li><a href="">Gia nhập đội ngũ chúng tôi</a></li>
-                    <li><a href="">Hỗ trợ cộng đồng biker</a></li>
-                    <li><a href="">Nhà máy lắp ráp</a></li>
+                    <li className="footer-top-left__heading"><Link to="/info/dangkyxe">Tài liệu - Tuyển dụng</Link></li>
+                    <li><Link to="/info/dangkyxe">Hướng dẫn đăng ký xe</Link></li>
+                    <li><Link to="/info/tuyendung">Tuyển dụng</Link></li>
+                    <li className="footer-top-left__heading mg-top30"><Link to="/about">Về Chúng Tôi</Link></li>
+                    <li><Link to="/about">Câu chuyện thương hiệu</Link></li>
+                    <li><Link to="/info/tuyendung">Gia nhập đội ngũ chúng tôi</Link></li>
+                    <li><Link to="/info/community">Hỗ trợ cộng đồng biker</Link></li>
+                    <li><Link to="/about">Nhà máy lắp ráp</Link></li>
                 </ul>
                 <ul>
-                    <li className="footer-top-left__heading"><a href="">Địa chỉ liên hệ</a></li>
-                    <li><a href="">Showroom Hà Nội: Số 103, Đường</a></li>
-                    <li><a href="">Vạn Phúc, Phường Vạn Phúc,</a></li>
-                    <li><a href="">Quận Hà Đông, TP. Hà Nội</a></li>
-                    <li><a href="">Showroom Tp HCM: Lầu 1, Số 163</a></li>
-                    <li><a href="">Trần Trọng Cung, Phường</a></li>
-                    <li><a href="">Tân Thuận Đông, Quận 7, Tp.</a></li>
-                    <li><a href="">Hồ Chí Minh</a></li>
+                    <li className="footer-top-left__heading"><Link to="/info/contact">Địa chỉ liên hệ</Link></li>
+                    <li><Link to="/info/contact">Showroom Hà Nội: Số 103, Đường</Link></li>
+                    <li><Link to="/info/contact">Vạn Phúc, Phường Vạn Phúc,</Link></li>
+                    <li><Link to="/info/contact">Quận Hà Đông, TP. Hà Nội</Link></li>
+                    <li><Link to="/info/contact">Showroom Tp HCM: Lầu 1, Số 163</Link></li>
+                    <li><Link to="/info/contact">Trần Trọng Cung, Phường</Link></li>
+                    <li><Link to="/info/contact">Tân Thuận Đông, Quận 7, Tp.</Link></li>
+                    <li><Link to="/info/contact">Hồ Chí Minh</Link></li>
                 </ul>
             </div>
 

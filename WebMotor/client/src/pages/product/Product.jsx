@@ -10,7 +10,7 @@ export default function Product() {
     Productt();
     useProductFilter();
     AddProduct();
-    
+
     const [data, setData] = useState([]);
     const [totalProduct, setTotalProduct] = useState(0);
     const [searchParams, setSearchParams] = useSearchParams();
@@ -20,9 +20,16 @@ export default function Product() {
     // Di chuyển loadData ra ngoài useEffect
     const loadData = async () => {
         try {
+            const keyword = searchParams.get('keyword');
+            if (keyword) {
+                const response = await axios.get(`http://localhost:5000/api/searchsp/${encodeURIComponent(keyword)}`);
+                setData(response.data);
+                setTotalProduct(response.data.length);
+                return;
+            }
             const page = searchParams.get('page') || 1;
             const response = await axios.get(`http://localhost:5000/api/getallsp?page=${page}`);
-            setTotalProduct(response.data[0].totalproduct);
+            setTotalProduct(response.data[0]?.totalproduct || 0);
             setData(response.data);
         } catch (error) {
             console.error("Lỗi khi lấy dữ liệu", error);
@@ -34,12 +41,12 @@ export default function Product() {
     const handlePageClick = (event) => {
         setSearchParams(params => {
             params.set('page', event.selected + 1)
-            console.log(event.selected+1)
+            console.log(event.selected + 1)
             return params
         })
 
-      };
-      const pageCount = Math.ceil(totalProduct / itemsPageSize);
+    };
+    const pageCount = Math.ceil(totalProduct / itemsPageSize);
 
     useEffect(() => {
         if (searchParams.has('page')) {
@@ -67,45 +74,45 @@ export default function Product() {
         }
     };
 
-        // Hàm tìm kiếm theo nhóm sản phẩm
-        const handleSearchtype = async (searchTermid) => {
-            setSearchTermid(searchTermid); // Cập nhật state khi chọn nhóm sản phẩm
-            handleSearchByPrice(priceRange.minPrice, priceRange.maxPrice, searchTermid);
-        };
-    
-        const handlePriceFilterChange = (minPrice, maxPrice) => {
-            setPriceRange({ minPrice, maxPrice });
-            handleSearchByPrice(minPrice, maxPrice);
-        };
-    
-        // Hàm tìm kiếm theo giá và nhóm sản phẩm
-        const handleSearchByPrice = async (minPrice, maxPrice , id_danh_muc = searchTermid) => {
-            try {
-                const response = await axios.get(`http://localhost:5000/api/searchgdvprice`, {
-                    params: { minPrice, maxPrice ,id_danh_muc }
-                });
-                setData(response.data);
-            } catch (error) {
-                console.error("Lỗi khi tìm kiếm theo giá", error);
-            }
-        };
-    
-        useEffect(() => {
-            handleSearchByPrice(priceRange.minPrice, priceRange.maxPrice); // Gọi khi priceRange thay đổi
-        }, [priceRange]);
-    
+    // Hàm tìm kiếm theo nhóm sản phẩm
+    const handleSearchtype = async (searchTermid) => {
+        setSearchTermid(searchTermid); // Cập nhật state khi chọn nhóm sản phẩm
+        handleSearchByPrice(priceRange.minPrice, priceRange.maxPrice, searchTermid);
+    };
+
+    const handlePriceFilterChange = (minPrice, maxPrice) => {
+        setPriceRange({ minPrice, maxPrice });
+        handleSearchByPrice(minPrice, maxPrice);
+    };
+
+    // Hàm tìm kiếm theo giá và nhóm sản phẩm
+    const handleSearchByPrice = async (minPrice, maxPrice, id_danh_muc = searchTermid) => {
+        try {
+            const response = await axios.get(`http://localhost:5000/api/searchgdvprice`, {
+                params: { minPrice, maxPrice, id_danh_muc }
+            });
+            setData(response.data);
+        } catch (error) {
+            console.error("Lỗi khi tìm kiếm theo giá", error);
+        }
+    };
+
+    useEffect(() => {
+        handleSearchByPrice(priceRange.minPrice, priceRange.maxPrice); // Gọi khi priceRange thay đổi
+    }, [priceRange]);
+
 
     const formatCurrency = (number) => {
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(number);
-    };  
+    };
 
     return (
         <Fragment>
             <div className="all-product-container" style={{ paddingBottom: '30px' }}>
-            <div className="filter">
+                <div className="filter">
                     <h2>Sản phẩm Motor</h2>
                     <div className="filter-search">
-                        <input  onChange={handleSearchname} placeholder="Tìm kiếm dịch vụ..." type="text" />
+                        <input onChange={handleSearchname} placeholder="Tìm kiếm dịch vụ..." type="text" />
                         {/* <button
                         >
                             <img src="../Images/icon-search.svg" alt="" />
@@ -118,11 +125,11 @@ export default function Product() {
                         </div>
                         <ul className="filter-item__option">
                             <li>abc</li>
-                            <li onClick={() => handlePriceFilterChange(0,99999999999)}>Hiển thị tất cả</li>
+                            <li onClick={() => handlePriceFilterChange(0, 99999999999)}>Hiển thị tất cả</li>
                             <li onClick={() => handlePriceFilterChange(100000000, 200000000)}>100.000.000đ - 200.000.000đ</li>
                             <li onClick={() => handlePriceFilterChange(200000000, 500000000)}>200.000.000đ - 500.000.000đ</li>
                             <li onClick={() => handlePriceFilterChange(500000000, 1000000000)}>500.000.000đ - 1.000.000.000đ</li>
-                            <li onClick={() => handlePriceFilterChange(1000000000,99999999999 )}>Trên 1.000.000đ</li>
+                            <li onClick={() => handlePriceFilterChange(1000000000, 99999999999)}>Trên 1.000.000đ</li>
                         </ul>
                     </div>
 
@@ -148,7 +155,7 @@ export default function Product() {
                             ))}
                         </ul>
 
-                   
+
                     </div>
                     <div className="filter-sort filter-item">
                         <div className="filter-item__inner">
@@ -167,69 +174,87 @@ export default function Product() {
 
                 <div className="container1">
                     <div className="product-type">
-                        <div className="row">
-                            {/* Sản phẩm mẫu */}
-                            
-
-                            {/* Render sản phẩm từ dữ liệu */}
-                            {data.map((item) => (
-                                <div key={item.ma_san_pham} className="col p-2-4">
-                                    <div id={`${item.ma_san_pham}`} className="product">
-                                        <div className="product-img-wrap" style={{ marginBottom: '8px' }}>
-                                            <Link to={`/detail/${item.ma_san_pham}`} className="product-img product-img--small">
-                                                <img className="product-img-1" src={item.anh_sanpham} alt="" />
-                                                <img className="product-img-2" src={item.anhhover1} alt="" />
-                                            </Link>
-                                            <div className="product-size">
-                                                <p>Thêm nhanh vào giỏ hàng +</p>
-                                                <p>( Chọn phân khối của xe ) </p>
-                                                <div className="btn btn--size">150</div>
+                        {data.length === 0 ? (
+                            <div style={{
+                                width: '100%',
+                                minHeight: '320px',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                padding: '48px 16px',
+                                textAlign: 'center',
+                                color: '#666'
+                            }}>
+                                <i className="fa-solid fa-magnifying-glass" style={{ fontSize: '48px', marginBottom: '16px', color: '#bbb' }}></i>
+                                <h3 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '8px', color: '#333' }}>
+                                    Không tìm thấy sản phẩm phù hợp
+                                </h3>
+                                <p style={{ fontSize: '14px', maxWidth: '420px' }}>
+                                    Vui lòng thử lại với từ khóa khác hoặc xem toàn bộ sản phẩm.
+                                </p>
+                            </div>
+                        ) : (
+                            <div className="row">
+                                {data.map((item) => (
+                                    <div key={item.ma_san_pham} className="col p-2-4">
+                                        <div id={`${item.ma_san_pham}`} className="product">
+                                            <div className="product-img-wrap" style={{ marginBottom: '8px' }}>
+                                                <Link to={`/detail/${item.ma_san_pham}`} className="product-img product-img--small">
+                                                    <img className="product-img-1" src={item.anh_sanpham} alt="" />
+                                                    <img className="product-img-2" src={item.anhhover1} alt="" />
+                                                </Link>
+                                                <div className="product-size">
+                                                    <p>Thêm nhanh vào giỏ hàng +</p>
+                                                    <p>( Chọn phân khối của xe ) </p>
+                                                    <div className="btn btn--size">150</div>
                                                     <div className="btn btn--size">350</div>
                                                     <div className="btn btn--size">650</div>
                                                     <div className="btn btn--size">1000</div>
-                                            </div>
-                                        </div>
-                                        <div className="product-content">
-                                            <div style={{ display: 'none' }} className="product-content__option ">
-                                                <div className="product-content__option-item-wrap active">
-                                                    <span data={item.mau_sac}></span>
-                                                    <span data={item.soluong}></span>
                                                 </div>
                                             </div>
-                                            <a className="product-name">{item.ten_san_pham}</a>
-                                            <div className="product-price-wrap">
-                                                <div className="product-price">{formatCurrency(item.gia)}</div>
+                                            <div className="product-content">
+                                                <div style={{ display: 'none' }} className="product-content__option ">
+                                                    <div className="product-content__option-item-wrap active">
+                                                        <span data={item.mau_sac}></span>
+                                                        <span data={item.soluong}></span>
+                                                    </div>
+                                                </div>
+                                                <a className="product-name">{item.ten_san_pham}</a>
+                                                <div className="product-price-wrap">
+                                                    <div className="product-price">{formatCurrency(item.gia)}</div>
+                                                </div>
+                                                <div className="product-discount">
+                                                    {item.thongbao}
+                                                </div>
+                                                <div className="sale-tag product-tag">{item.sale}</div>
                                             </div>
-                                            <div className="product-discount">
-                                                {item.thongbao}
-                                            </div>
-                                            <div className="sale-tag product-tag">{item.sale}</div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
-                        </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
-                    
+
                 </div>
                 <ReactPaginate
-                breakLabel="..."
-                nextLabel="Trang tiếp >"
-                onPageChange={handlePageClick}
-                pageRangeDisplayed={5}
-                pageCount={pageCount}
-                previousLabel="< Trước"
-                renderOnZeroPageCount={null}
-                containerClassName="pagination"
-                pageLinkClassName="page-num"
-                previousLinkClassName="page-num"
-                nextLinkClassName="page-num"
-                activeLinkClassName="active"
-            />
-                
+                    breakLabel="..."
+                    nextLabel="Trang tiếp >"
+                    onPageChange={handlePageClick}
+                    pageRangeDisplayed={5}
+                    pageCount={pageCount}
+                    previousLabel="< Trước"
+                    renderOnZeroPageCount={null}
+                    containerClassName="pagination"
+                    pageLinkClassName="page-num"
+                    previousLinkClassName="page-num"
+                    nextLinkClassName="page-num"
+                    activeLinkClassName="active"
+                />
+
             </div>
 
-           
+
         </Fragment>
     );
 }

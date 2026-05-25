@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import Silde from '../../components/slider/silde';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import AddProduct from '../../until/cart';
@@ -8,8 +8,21 @@ import { useUser } from '../../until/userContext';
 export default function Home() {
     AddProduct();
     const [data,setData] = useState([]);
+    const [homeSearch, setHomeSearch] = useState('');
+    const navigate = useNavigate();
 
     const {user} = useUser();
+
+    const handleHomeSearch = (e) => {
+        e.preventDefault();
+        const keyword = homeSearch.trim();
+        if (!keyword) return;
+        navigate(`/product?keyword=${encodeURIComponent(keyword)}`);
+    };
+
+    const handleQuickSearch = (keyword) => {
+        navigate(`/product?keyword=${encodeURIComponent(keyword)}`);
+    };
 
    const coupons = [
     {
@@ -205,9 +218,16 @@ export default function Home() {
                         <div className="homepage-search-wrapper">
                             <h2 className="homepage-search-heading"> Bạn tìm gì hôm nay? </h2>
                             <div className="homepage-search-inner">
-                                <form action="/spotlight" method="GET">
-                                    <input type="text" name="keyword" placeholder="Hãy thử bắt đầu với H2R xem sao ?" className="homepage-search-control"/>
-                                    <button className="homepage-search-submit">
+                                <form onSubmit={handleHomeSearch}>
+                                    <input
+                                        type="text"
+                                        name="keyword"
+                                        placeholder="Hãy thử bắt đầu với H2R xem sao ?"
+                                        className="homepage-search-control"
+                                        value={homeSearch}
+                                        onChange={(e) => setHomeSearch(e.target.value)}
+                                    />
+                                    <button type="submit" className="homepage-search-submit">
                                         <i className="fa-solid fa-magnifying-glass fa-2xl"></i>
                                     </button>
                                 </form>
@@ -215,11 +235,11 @@ export default function Home() {
                             <div className="homepage-search-content">
                                 <p className="home-search-description"> Từ khóa nổi bật ngày hôm nay</p>
                                 <div className="homepage-search-buttons">
-                                    <a href="#" className="homepage-search-button">Phụ kiện xe</a>
-                                    <a href="#" className="homepage-search-button">Áo giáp</a>
-                                    <a href="#" className="homepage-search-button">Ninja H2R</a>
-                                    <a href="#" className="homepage-search-button">CBR 650</a>
-                                    <a href="#" className="homepage-search-button">R1</a>
+                                    <a onClick={() => handleQuickSearch('Phụ kiện')} className="homepage-search-button" style={{ cursor: 'pointer' }}>Phụ kiện xe</a>
+                                    <a onClick={() => handleQuickSearch('Áo giáp')} className="homepage-search-button" style={{ cursor: 'pointer' }}>Áo giáp</a>
+                                    <a onClick={() => handleQuickSearch('Ninja')} className="homepage-search-button" style={{ cursor: 'pointer' }}>Ninja H2R</a>
+                                    <a onClick={() => handleQuickSearch('CBR')} className="homepage-search-button" style={{ cursor: 'pointer' }}>CBR 650</a>
+                                    <a onClick={() => handleQuickSearch('R1')} className="homepage-search-button" style={{ cursor: 'pointer' }}>R1</a>
                                 </div>
                             </div>
                         </div>
@@ -291,10 +311,10 @@ export default function Home() {
                             <div key={item.id} className="col p-2-4">
                             <div id={`${item.id}`} className="product">
                                 <div className="product-img-wrap" style={{ marginBottom: '8px' }}>
-                                <a href="./product-detail.html" className="product-img product-img--small">
+                                <Link to={`/detail/${item.id}`} className="product-img product-img--small">
                                     <img className="product-img-1" src={item.image} alt="" />
                                     <img className="product-img-2" src={item.image} alt="" />
-                                </a>
+                                </Link>
                                 <div className="product-size">
                                     <p>Thêm nhanh vào giỏ hàng +</p>
                                     {item.sizes.map((size, index) => (
@@ -313,7 +333,7 @@ export default function Home() {
                                                     <span data={item.mau_sac}></span>
                                                 </div>
                                 </div>
-                                <a href="./product-detail.html" className="product-name">{item.name}</a>
+                                <Link to={`/detail/${item.id}`} className="product-name">{item.name}</Link>
                                 <div className="product-price-wrap">
                                     <div className="product-price-new">{item.priceNew.toLocaleString()}đ</div>
                                     <div className="product-price">{item.priceOld.toLocaleString()}đ</div>
@@ -340,16 +360,16 @@ export default function Home() {
                         <div className="col p-2-4">
                             <div  className="product">
                                 <div className="product-img-wrap" style={{ marginBottom: '8px' }}>
-                                    <a href="./product-detail.html" className="product-img product-img--small">
-                                        <img className="product-img-1" src="/Images/kawasaki1.jpg" alt="Nike Shoe 1" />
-                                        <img className="product-img-2" src="/Images/kawasaki1-1.jpg" alt="Nike Shoe 1 Alternate" />
-                                    </a>
+                                    <Link to="/detail/1" className="product-img product-img--small">
+                                        <img className="product-img-1" src="/Images/kawasaki1.jpg" alt="Kawasaki H2R" />
+                                        <img className="product-img-2" src="/Images/kawasaki1-1.jpg" alt="Kawasaki H2R" />
+                                    </Link>
                                     <div className="product-size">
                                         <p>Thêm nhanh vào giỏ hàng +</p>
                                     </div>
                                 </div>
                                 <div className="product-content">
-                                    <a href="./product-detail.html" className="product-name">Kawasaki H2R</a>
+                                    <Link to="/detail/1" className="product-name">Kawasaki H2R</Link>
                                     <div className="product-price-wrap">
                                         <div className="product-price-new">380,200,000đ</div>
                                         <div className="product-price">390,800,000đ</div>
@@ -364,16 +384,16 @@ export default function Home() {
                         <div className="col p-2-4">
                             <div className="product">
                                 <div className="product-img-wrap" style={{ marginBottom: '8px' }}>
-                                    <a href="./product-detail.html" className="product-img product-img--small">
-                                        <img className="product-img-1" src="/Images/kawasaki2.jpg" alt="Nike Shoe 2" />
-                                        <img className="product-img-2" src="/Images/kawasaki2-2.jpg" alt="Nike Shoe 2 Alternate" />
-                                    </a>
+                                    <Link to="/detail/2" className="product-img product-img--small">
+                                        <img className="product-img-1" src="/Images/kawasaki2.jpg" alt="Kawasaki Ninja 400" />
+                                        <img className="product-img-2" src="/Images/kawasaki2-2.jpg" alt="Kawasaki Ninja 400" />
+                                    </Link>
                                     <div className="product-size">
                                         <p>Thêm nhanh vào giỏ hàng +</p>
                                     </div>
                                 </div>
                                 <div className="product-content">
-                                    <a href="./product-detail.html" className="product-name">Kawasaki Ninja 400</a>
+                                    <Link to="/detail/2" className="product-name">Kawasaki Ninja 400</Link>
                                     <div className="product-price-wrap">
                                         <div className="product-price-new">200,700,000đ</div>
                                         <div className="product-price">220,200,000đ</div>
@@ -388,16 +408,16 @@ export default function Home() {
                         <div className="col p-2-4">
                             <div className="product">
                                 <div className="product-img-wrap" style={{ marginBottom: '8px' }}>
-                                    <a href="./product-detail.html" className="product-img product-img--small">
-                                        <img className="product-img-1" src="/Images/kawasaki3.jpg" alt="Nike Shoe 3" />
-                                        <img className="product-img-2" src="/Images/kawasaki3-3.jpg" alt="Nike Shoe 3 Alternate" />
-                                    </a>
+                                    <Link to="/detail/3" className="product-img product-img--small">
+                                        <img className="product-img-1" src="/Images/kawasaki3.jpg" alt="Kawasaki Versys 1000" />
+                                        <img className="product-img-2" src="/Images/kawasaki3-3.jpg" alt="Kawasaki Versys 1000" />
+                                    </Link>
                                     <div className="product-size">
                                         <p>Thêm nhanh vào giỏ hàng +</p>
                                     </div>
                                 </div>
                                 <div className="product-content">
-                                    <a href="./product-detail.html" className="product-name">Kawasaki Versys 1000</a>
+                                    <Link to="/detail/3" className="product-name">Kawasaki Versys 1000</Link>
                                     <div className="product-price-wrap">
                                         <div className="product-price-new">94,500,000đ</div>
                                         <div className="product-price">105,200,000đ</div>
@@ -412,16 +432,16 @@ export default function Home() {
                         <div className="col p-2-4">
                             <div className="product">
                                 <div className="product-img-wrap" style={{ marginBottom: '8px' }}>
-                                    <a href="./product-detail.html" className="product-img product-img--small">
-                                        <img className="product-img-1" src="/Images/ducati1.jpg" alt="Nike Shoe 4" />
-                                        <img className="product-img-2" src="/Images/ducati1.jpg" alt="Nike Shoe 4 Alternate" />
-                                    </a>
+                                    <Link to="/detail/4" className="product-img product-img--small">
+                                        <img className="product-img-1" src="/Images/ducati1.jpg" alt="Ducati Streetfighter V2" />
+                                        <img className="product-img-2" src="/Images/ducati1.jpg" alt="Ducati Streetfighter V2" />
+                                    </Link>
                                     <div className="product-size">
                                         <p>Thêm nhanh vào giỏ hàng +</p>
                                     </div>
                                 </div>
                                 <div className="product-content">
-                                    <a href="./product-detail.html" className="product-name">Ducati Streetfighter V2</a>
+                                    <Link to="/detail/4" className="product-name">Ducati Streetfighter V2</Link>
                                     <div className="product-price-wrap">
                                         <div className="product-price-new">103,800,000đ</div>
                                         <div className="product-price">124,200,000đ</div>
@@ -436,16 +456,16 @@ export default function Home() {
                         <div className="col p-2-4">
                             <div className="product">
                                 <div className="product-img-wrap" style={{ marginBottom: '8px' }}>
-                                    <a href="./product-detail.html" className="product-img product-img--small">
-                                        <img className="product-img-1" src="/Images/ducati2.jpg" alt="Nike Shoe 5" />
-                                        <img className="product-img-2" src="/Images/ducati2.jpg" alt="Nike Shoe 5 Alternate" />
-                                    </a>
+                                    <Link to="/detail/5" className="product-img product-img--small">
+                                        <img className="product-img-1" src="/Images/ducati2.jpg" alt="Ducati DesertX" />
+                                        <img className="product-img-2" src="/Images/ducati2.jpg" alt="Ducati DesertX" />
+                                    </Link>
                                     <div className="product-size">
                                         <p>Thêm nhanh vào giỏ hàng +</p>
                                     </div>
                                 </div>
                                 <div className="product-content">
-                                    <a href="./product-detail.html" className="product-name">Ducati DesertX</a>
+                                    <Link to="/detail/5" className="product-name">Ducati DesertX</Link>
                                     <div className="product-price-wrap">
                                         <div className="product-price-new">92,500,000đ</div>
                                         <div className="product-price">103,000,000đ</div>
@@ -521,7 +541,7 @@ export default function Home() {
                 <section className="homepage-care-and-share">
                     <div className="container--full">
                         <div className="homepage-care-and-share__inner">
-                            <a href="#">
+                            <Link to="/care-and-share">
                                 <div className="homepage-care-and-share__image">
                                     <picture>
                                         <img src="../Images/care and share.png" alt=""/>
@@ -532,13 +552,13 @@ export default function Home() {
                                         <img src="https://mcdn.coolmate.me/image/March2023/mceclip8.png" alt=""/>
                                     </picture>
                                     <h2>
-                                        Góp phần mang lại <br/> cuộc sống tươi đẹp 
+                                        Góp phần mang lại <br/> cuộc sống tươi đẹp
                                         <br className="mobile--hidden"/>
                                         hơn cho tụi nhỏ
                                     </h2>
                                     <div className="btn--primary"> Tìm hiểu thêm về Care&Share</div>
                                 </div>
-                            </a>
+                            </Link>
                         </div>
                     </div>
                     
@@ -567,7 +587,7 @@ export default function Home() {
                         <div className="homepage-service__grid">
                             <div className="homepage-service__item">
                                 <div className="infomation-card">
-                                    <a href="#" className="infomation-card">
+                                    <Link to="/about" className="infomation-card">
                                         <div className="infomation-card__thumbnail">
                                             <img src="../Images/Motor1.jpg" alt=""/>
                                         </div>
@@ -577,12 +597,12 @@ export default function Home() {
                                                 <i className="fa-solid fa-arrow-up fa-rotate-45"></i>
                                             </span>
                                         </div>
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
                             <div className="homepage-service__item">
                                 <div className="infomation-card">
-                                    <a href="#" className="infomation-card">
+                                    <Link to="/service" className="infomation-card">
                                         <div className="infomation-card__thumbnail">
                                             <img src="../Images/dichvuhailong100.png" alt=""/>
                                         </div>
@@ -592,7 +612,7 @@ export default function Home() {
                                                 <i className="fa-solid fa-arrow-up fa-rotate-45"></i>
                                             </span>
                                         </div>
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
                         </div>

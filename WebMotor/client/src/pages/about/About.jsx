@@ -7,10 +7,10 @@ export default function About() {
         <div className="cs-banner__image">
           <img src="../Images/hondabanner1.jpg" alt="Banner Motor" />
         </div>
-        <div className="cs-banner__content">
+        {/* <div className="cs-banner__content">
           <h1 className="cs-banner__heading">Câu chuyện về Xe Mô Tô</h1>
           <p className="cs-banner__description">Khám phá hành trình và mục tiêu của ngành xe mô tô trong việc phát triển bền vững và kết nối đam mê tốc độ!</p>
-        </div>
+        </div> */}
       </section>
 
       <section className="cs-about">
