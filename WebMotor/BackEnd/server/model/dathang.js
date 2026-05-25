@@ -2,143 +2,157 @@ const db = require('../config/config');
 
 const Order = {
     addOrder: (orderData, callback) => {
-        const { 
-            ma_khach_hang, 
-            ngay_dat_hang, 
-            tong_tien, 
-            trang_thai, 
-            ten_khach, 
-            dia_chi, 
-            ghi_chu, 
+        const {
+            ma_khach_hang,
+            ngay_dat_hang,
+            tong_tien,
+            trang_thai,
+            ten_khach,
+            dia_chi,
+            ghi_chu,
             sdt,
             loai_thanh_toan,
-            trang_thai_thanh_toan, 
-            chi_tiet_don_hang 
+            trang_thai_thanh_toan,
+            chi_tiet_don_hang
         } = orderData;
 
-        const insertOrderQuery = `
-            INSERT INTO don_hang 
-            (ma_khach_hang, ngay_dat_hang, tong_tien, trang_thai, 
-            ten_khach, dia_chi, ghi_chu, sdt,
-            loai_thanh_toan,trang_thai_thanh_toan)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `;
+        if (!Array.isArray(chi_tiet_don_hang) || chi_tiet_don_hang.length === 0) {
+            return callback({ message: 'Đơn hàng không có sản phẩm' });
+        }
 
         db.getConnection((err, connection) => {
-            if (err) {
-                console.error("Lỗi kết nối DB:", err);
-                return callback({
-                    message: "Lỗi kết nối database",
-                    error: err
-                });
-            }
+            if (err) return callback({ message: 'Lỗi kết nối database', error: err });
 
             connection.beginTransaction((err) => {
                 if (err) {
                     connection.release();
-                    console.error("Lỗi beginTransaction:", err);
-
-                    return callback({
-                        message: "Không thể bắt đầu transaction",
-                        error: err
-                    });
+                    return callback({ message: 'Không thể bắt đầu transaction', error: err });
                 }
 
-                connection.query(
-                    insertOrderQuery,
-                    [
-                        ma_khach_hang, 
-                        ngay_dat_hang, 
-                        tong_tien, 
-                        trang_thai, 
-                        ten_khach, 
-                        dia_chi, 
-                        ghi_chu, 
-                        sdt,
-                        loai_thanh_toan,
-                        trang_thai_thanh_toan
-                    ],
-                    (err, result) => {
+                // Bước 1: kiểm tra tồn kho (lock row bằng FOR UPDATE)
+                const productIds = chi_tiet_don_hang.map(it => Number(it.ma_san_pham));
+                const placeholders = productIds.map(() => '?').join(',');
+                const sqlCheck = `SELECT ma_san_pham, ten_san_pham, soluong FROM san_pham WHERE ma_san_pham IN (${placeholders}) FOR UPDATE`;
 
-                        if (err) {
-                            console.error("Lỗi insert đơn hàng:", err);
+                connection.query(sqlCheck, productIds, (err, stockRows) => {
+                    if (err) {
+                        return connection.rollback(() => {
+                            connection.release();
+                            callback({ message: 'Lỗi kiểm tra tồn kho', error: err });
+                        });
+                    }
 
-                            return connection.rollback(() => {
-                                connection.release();
+                    const stockMap = {};
+                    stockRows.forEach(r => { stockMap[r.ma_san_pham] = r; });
 
-                                callback({
-                                    message: "Lỗi khi thêm đơn hàng",
-                                    error: err
-                                });
-                            });
+                    const issues = [];
+                    for (const item of chi_tiet_don_hang) {
+                        const id = Number(item.ma_san_pham);
+                        const stock = stockMap[id];
+                        if (!stock) {
+                            issues.push({ ma_san_pham: id, ten: item.ten_san_pham, ly_do: 'Sản phẩm không tồn tại' });
+                            continue;
                         }
+                        const available = parseInt(stock.soluong) || 0;
+                        if (available <= 0) {
+                            issues.push({ ma_san_pham: id, ten: stock.ten_san_pham, ly_do: 'Đã hết hàng', available: 0, requested: item.so_luong });
+                        } else if (available < item.so_luong) {
+                            issues.push({ ma_san_pham: id, ten: stock.ten_san_pham, ly_do: `Chỉ còn ${available} sản phẩm`, available, requested: item.so_luong });
+                        }
+                    }
 
-                        const ma_don_hang = result.insertId;
+                    if (issues.length > 0) {
+                        return connection.rollback(() => {
+                            connection.release();
+                            callback({
+                                message: 'Sản phẩm không đủ tồn kho',
+                                stock_issues: issues
+                            });
+                        });
+                    }
 
-                        const insertOrderDetailsQuery = `
-                            INSERT INTO chi_tiet_don_hang 
-                            (ma_don_hang, ma_san_pham, ten_san_pham, 
-                            so_luong, gia, kich_co, mau_sac ,anh_sanpham)
-                            VALUES ?
-                        `;
+                    // Bước 2: insert đơn hàng
+                    const insertOrderQuery = `
+                        INSERT INTO don_hang
+                        (ma_khach_hang, ngay_dat_hang, tong_tien, trang_thai,
+                         ten_khach, dia_chi, ghi_chu, sdt,
+                         loai_thanh_toan, trang_thai_thanh_toan)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    `;
 
-                        console.log("Chi tiết đơn hàng:", chi_tiet_don_hang);
+                    connection.query(
+                        insertOrderQuery,
+                        [ma_khach_hang, ngay_dat_hang, tong_tien, trang_thai, ten_khach, dia_chi, ghi_chu, sdt, loai_thanh_toan, trang_thai_thanh_toan],
+                        (err, result) => {
+                            if (err) {
+                                return connection.rollback(() => {
+                                    connection.release();
+                                    callback({ message: 'Lỗi khi thêm đơn hàng', error: err });
+                                });
+                            }
 
-                        const orderDetailsValues = chi_tiet_don_hang?.map((item) => [
-                            ma_don_hang,
-                            item.ma_san_pham,
-                            item.ten_san_pham,
-                            item.so_luong,
-                            item.gia,
-                            item.kich_co,
-                            item.mau_sac,
-                            item.anh_sanpham
-                        ]);
+                            const ma_don_hang = result.insertId;
 
-                        connection.query(
-                            insertOrderDetailsQuery,
-                            [orderDetailsValues],
-                            (err) => {
+                            // Bước 3: insert chi tiết
+                            const insertOrderDetailsQuery = `
+                                INSERT INTO chi_tiet_don_hang
+                                (ma_don_hang, ma_san_pham, ten_san_pham,
+                                 so_luong, gia, kich_co, mau_sac, anh_sanpham)
+                                VALUES ?
+                            `;
 
+                            const orderDetailsValues = chi_tiet_don_hang.map(item => [
+                                ma_don_hang,
+                                item.ma_san_pham,
+                                item.ten_san_pham,
+                                item.so_luong,
+                                item.gia,
+                                item.kich_co,
+                                item.mau_sac,
+                                item.anh_sanpham
+                            ]);
+
+                            connection.query(insertOrderDetailsQuery, [orderDetailsValues], (err) => {
                                 if (err) {
-                                    console.error("Lỗi insert chi tiết đơn:", err);
-
                                     return connection.rollback(() => {
                                         connection.release();
-
-                                        callback({
-                                            message: "Lỗi khi thêm chi tiết đơn hàng",
-                                            error: err
-                                        });
+                                        callback({ message: 'Lỗi khi thêm chi tiết đơn hàng', error: err });
                                     });
                                 }
 
-                                connection.commit((err) => {
-
-                                    if (err) {
-                                        console.error("Lỗi commit:", err);
-
-                                        return connection.rollback(() => {
-                                            connection.release();
-
-                                            callback({
-                                                message: "Lỗi commit dữ liệu",
-                                                error: err
-                                            });
-                                        });
-                                    }
-
-                                    connection.release();
-
-                                    callback(null, {
-                                        message: "Thêm đơn hàng thành công",
-                                        ma_don_hang
+                                // Bước 4: trừ tồn kho từng item
+                                const stockUpdates = chi_tiet_don_hang.map(item => new Promise((resolve, reject) => {
+                                    const sqlUpdate = `UPDATE san_pham SET soluong = soluong - ? WHERE ma_san_pham = ? AND soluong >= ?`;
+                                    connection.query(sqlUpdate, [item.so_luong, item.ma_san_pham, item.so_luong], (err, res) => {
+                                        if (err) return reject(err);
+                                        if (res.affectedRows === 0) return reject(new Error(`Không trừ được tồn kho sp ${item.ma_san_pham}`));
+                                        resolve();
                                     });
-                                });
-                            }
-                        );
-                    }
-                );
+                                }));
+
+                                Promise.all(stockUpdates)
+                                    .then(() => {
+                                        connection.commit((err) => {
+                                            if (err) {
+                                                return connection.rollback(() => {
+                                                    connection.release();
+                                                    callback({ message: 'Lỗi commit dữ liệu', error: err });
+                                                });
+                                            }
+                                            connection.release();
+                                            callback(null, { message: 'Đặt hàng thành công', ma_don_hang });
+                                        });
+                                    })
+                                    .catch(err => {
+                                        connection.rollback(() => {
+                                            connection.release();
+                                            callback({ message: 'Lỗi cập nhật tồn kho', error: err.message });
+                                        });
+                                    });
+                            });
+                        }
+                    );
+                });
             });
         });
     }

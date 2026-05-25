@@ -6,6 +6,7 @@ html {
   box-sizing: border-box;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  font-size: 16px;
 }
 
 *,
@@ -18,6 +19,88 @@ body {
   margin: 0;
   min-width: 320px;
   overflow-x: hidden;
+  font-size: 15px !important;
+  line-height: 1.55 !important;
+}
+
+/* Heading & content */
+h1, .h1 { font-size: 2rem !important; }
+h2, .h2 { font-size: 1.65rem !important; }
+h3, .h3 { font-size: 1.4rem !important; }
+h4, .h4 { font-size: 1.2rem !important; }
+h5, .h5 { font-size: 1.1rem !important; }
+h6, .h6 { font-size: 1rem !important; }
+
+/* Cards và stat cards */
+.card-header h6 {
+  font-size: 1rem !important;
+  font-weight: 700;
+}
+
+.card-body .text-xs {
+  font-size: 0.8rem !important;
+}
+
+.card-body .h5 {
+  font-size: 1.35rem !important;
+}
+
+/* Sidebar */
+.sidebar .nav-item .nav-link {
+  font-size: 0.95rem !important;
+  padding: 1rem 1rem !important;
+}
+
+.sidebar-brand-text {
+  font-size: 1.15rem !important;
+}
+
+/* Tables */
+.table {
+  font-size: 0.95rem !important;
+}
+
+.table thead th {
+  font-size: 0.95rem !important;
+  font-weight: 700;
+}
+
+.table td, .table th {
+  padding: 0.85rem !important;
+  vertical-align: middle;
+}
+
+/* Forms */
+.form-control,
+.form-control-sm,
+input.form-control,
+select.form-control,
+textarea.form-control {
+  font-size: 0.95rem !important;
+}
+
+label, .form-label {
+  font-size: 0.9rem !important;
+  font-weight: 600;
+}
+
+/* Buttons */
+.btn {
+  font-size: 0.9rem !important;
+}
+
+.btn-sm {
+  font-size: 0.85rem !important;
+}
+
+/* Pagination */
+.page-link {
+  font-size: 0.9rem !important;
+}
+
+/* Topbar */
+.navbar-search input {
+  font-size: 0.9rem !important;
 }
 
 img,

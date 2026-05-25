@@ -2,6 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react'
 import ActiveCart, { LoadData } from '../../until/cartactive';
 import axios from "axios";
 import { useUser } from '../../until/userContext';
+import StockAlertModal from '../../components/StockAlertModal';
 
 
 export default function Cartpage() {
@@ -14,9 +15,10 @@ export default function Cartpage() {
     const [coupons, setCoupons] = useState([]);
     const [updateTotalTrigger, setUpdateTotalTrigger] = useState(0);
     const [selectedPayment, setSelectedPayment] = useState("BuyLate");
+    const [stockModal, setStockModal] = useState({ open: false, items: [], type: 'unavailable' });
 
     const [state, setState] = useState({
-        
+
         ten_khach_hang: '',
         sdt: '',
         dia_chi: '',
@@ -26,16 +28,84 @@ export default function Cartpage() {
         ghi_chu: '',
         tong_tien:0
     });
-         
+
     const { ten_khach_hang, sdt, dia_chi, tinh_thanh, quan_huyen, phuong_xa, ghi_chu,tong_tien } = state;
-    
+
     const handleInputChange = (e) => {
       const { name, value } = e.target;
       setState({ ...state, [name]: value });
     };
 
-    const handlePayment = (e) =>{
+    const validateStock = async () => {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        if (cart.length === 0) return { ok: false, type: 'empty', items: [] };
+
+        const issues = [];
+        let hasOutOfStock = false;
+        let hasInsufficient = false;
+
+        for (const item of cart) {
+            try {
+                const res = await axios.get(`http://localhost:5000/api/getsp/${item.id}`);
+                const product = res.data?.[0];
+                if (!product) {
+                    issues.push({
+                        name: item.name,
+                        img: item.img,
+                        message: 'Sản phẩm không tồn tại',
+                        available: 0,
+                        requested: item.quantity,
+                    });
+                    hasOutOfStock = true;
+                    continue;
+                }
+                const stock = parseInt(product.soluong) || 0;
+                if (stock <= 0) {
+                    issues.push({
+                        name: item.name,
+                        img: item.img,
+                        message: 'Đã hết hàng',
+                        available: 0,
+                        requested: item.quantity,
+                    });
+                    hasOutOfStock = true;
+                } else if (stock < item.quantity) {
+                    issues.push({
+                        name: item.name,
+                        img: item.img,
+                        message: `Chỉ còn ${stock} sản phẩm (đặt ${item.quantity})`,
+                        available: stock,
+                        requested: item.quantity,
+                    });
+                    hasInsufficient = true;
+                }
+            } catch (err) {
+                console.error('Lỗi kiểm tra tồn kho:', err);
+            }
+        }
+
+        if (issues.length === 0) return { ok: true };
+        return {
+            ok: false,
+            type: hasOutOfStock ? 'out_of_stock' : 'insufficient',
+            items: issues,
+        };
+    };
+
+    const handlePayment = async (e) =>{
         e.preventDefault();
+
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    if (cart.length === 0) {
+        setStockModal({ open: true, type: 'unavailable', items: [{ name: 'Giỏ hàng trống', message: 'Vui lòng thêm sản phẩm trước khi thanh toán' }] });
+        return;
+    }
+
+    const validation = await validateStock();
+    if (!validation.ok) {
+        setStockModal({ open: true, type: validation.type, items: validation.items });
+        return;
+    }
 
     if(window.confirm("Xác nhận lại thông tin đơn hàng , xác nhận đặt hàng ?")){
 
@@ -78,8 +148,17 @@ export default function Cartpage() {
 
         })
         .catch(error => {
-          console.error(error);
-          alert("Đã có lỗi xảy ra, vui lòng thử lại sau");
+          if (error.response?.status === 409 && error.response.data?.stock_issues) {
+            const issues = error.response.data.stock_issues.map(i => ({
+              name: i.ten,
+              message: i.ly_do,
+              available: i.available || 0,
+              requested: i.requested || 0,
+            }));
+            setStockModal({ open: true, type: 'out_of_stock', items: issues });
+          } else {
+            alert("Đã có lỗi xảy ra, vui lòng thử lại sau");
+          }
         });
     }
 
@@ -403,6 +482,13 @@ export default function Cartpage() {
                     </div>
                     
                 </div>
+
+                <StockAlertModal
+                    open={stockModal.open}
+                    onClose={() => setStockModal({ ...stockModal, open: false })}
+                    items={stockModal.items}
+                    type={stockModal.type}
+                />
     </Fragment>
   );
 }

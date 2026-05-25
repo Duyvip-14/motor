@@ -121,14 +121,29 @@ export default function Details() {
 
                             <div class="product-single__actions">
                                 <div class="quantity">
-                                    
-                                    <button class="btn-decrease">-</button>
+
+                                    <button class="btn-decrease" disabled={parseInt(sanpham.soluong) <= 0}>-</button>
                                     <span>1</span>
-                                    <button class="btn-increase">+</button>
+                                    <button class="btn-increase" disabled={parseInt(sanpham.soluong) <= 0}>+</button>
                                 </div>
-                                <div class="btn btn-addCart">
-                                    Chọn màu sắc và phân khối xe
-                                </div>
+                                {parseInt(sanpham.soluong) <= 0 ? (
+                                    <div
+                                        className="btn btn-addCart"
+                                        style={{
+                                            background: '#9ca3af',
+                                            color: '#fff',
+                                            cursor: 'not-allowed',
+                                            pointerEvents: 'none',
+                                        }}
+                                    >
+                                        <i className="fa-solid fa-ban" style={{ marginRight: 8 }}></i>
+                                        Hết hàng - Tạm hết
+                                    </div>
+                                ) : (
+                                    <div class="btn btn-addCart">
+                                        Chọn màu sắc và phân khối xe
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <div class="product-single__policy">

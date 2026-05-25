@@ -28,8 +28,12 @@ export default function IndexHDN() {
 
         const handleSearch = async (e) => {
             const searchTerm = e.target.value;
+            if (!searchTerm) {
+                loadData();
+                return;
+            }
             try {
-                const response = await axios.get(`http://localhost:5000/api/searchdn/${searchTerm}`);
+                const response = await axios.get(`http://localhost:5000/api/searchhdn/${searchTerm}`);
                 setData(response.data);
             } catch (error) {
                 console.error("Error searching data", error);
@@ -38,20 +42,25 @@ export default function IndexHDN() {
 
 
         const deleteDH = (ma_hoa_don) =>{
-            if(window.confirm("Bạn có muốn xóa danh mục này không ?")){
-                axios.delete(`http://localhost:5000/api/deletedonhang/${ma_hoa_don}`);
-                toast.success('Xóa đơn hàng thành công !', {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                    transition: Flip,
+            if(window.confirm("Bạn có muốn xóa hóa đơn nhập này không ?")){
+                axios.delete(`http://localhost:5000/api/deletehdn/${ma_hoa_don}`)
+                .then(() => {
+                    toast.success('Xóa hóa đơn nhập thành công !', {
+                        position: "top-right",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                        transition: Flip,
                     });
-                setTimeout(()=>loadData(),500);
+                    setTimeout(()=>loadData(),500);
+                })
+                .catch(err => {
+                    toast.error(err.response?.data?.message || 'Xóa thất bại');
+                });
             }
         }
   return (

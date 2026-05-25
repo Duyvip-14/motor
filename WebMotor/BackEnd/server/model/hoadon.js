@@ -23,49 +23,14 @@ const Bill = {
     },
 
     update: (ma_don_hang, billData, callback) => {
-        const { trang_thai,ma_nhan_vien,loai_thanh_toan,trang_thai_thanh_toan } = billData;
+        const { trang_thai, ma_nhan_vien, loai_thanh_toan, trang_thai_thanh_toan } = billData;
 
-        const sqlUpdate = "UPDATE don_hang SET trang_thai = ?,ma_nhan_vien = ?,loai_thanh_toan=?, trang_thai_thanh_toan=? WHERE ma_don_hang = ?";
-        db.query(sqlUpdate, [trang_thai,ma_nhan_vien,loai_thanh_toan,trang_thai_thanh_toan, ma_don_hang], (error, result) => {
-            if (error) {
-                return callback(error);
-            }
-
-            // Nếu trạng thái là 4 (đã giao thành công) thì trừ số lượng tồn
-            if (parseInt(trang_thai) === 4) {
-                const sqlGetDetails = "SELECT ma_san_pham, so_luong FROM chi_tiet_don_hang WHERE ma_don_hang = ?";
-                db.query(sqlGetDetails, [ma_don_hang], (error, details) => {
-                    if (error) {
-                        return callback(error);
-                    }
-
-                    // Duyệt từng sản phẩm trong đơn hàng và trừ số lượng
-                    let queries = details.map(item => {
-                        return new Promise((resolve, reject) => {
-                            const sqlUpdateStock = `
-                                UPDATE san_pham 
-                                SET soluong = soluong - ? 
-                                WHERE ma_san_pham = ?
-                            `;
-                            db.query(sqlUpdateStock, [item.so_luong, item.ma_san_pham], (err, res) => {
-                                if (err) reject(err);
-                                else resolve(res);
-                            });
-                        });
-                    });
-
-                    // Thực hiện tất cả truy vấn
-                    Promise.all(queries)
-                        .then(results => {
-                            callback(null, result); // trả về kết quả ban đầu của đơn hàng
-                        })
-                        .catch(err => {
-                            callback(err);
-                        });
-                });
-            } else {
-                callback(null, result); // Nếu không phải trạng thái 4, chỉ update đơn hàng
-            }
+        const sqlUpdate = "UPDATE don_hang SET trang_thai = ?, ma_nhan_vien = ?, loai_thanh_toan = ?, trang_thai_thanh_toan = ? WHERE ma_don_hang = ?";
+        db.query(sqlUpdate, [trang_thai, ma_nhan_vien, loai_thanh_toan, trang_thai_thanh_toan, ma_don_hang], (error, result) => {
+            if (error) return callback(error);
+            // Tồn kho đã được trừ ngay khi đặt hàng (xem dathang.js).
+            // Trạng thái 4 (đã giao) chỉ là chuyển trạng thái, không trừ thêm để tránh trừ 2 lần.
+            callback(null, result);
         });
     },
 
