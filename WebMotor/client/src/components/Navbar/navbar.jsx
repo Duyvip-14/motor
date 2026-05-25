@@ -186,6 +186,9 @@ export default function Navbar() {
                                 <Link to="/donhang" className="dropdown-item">
                                     <i className="fas fa-shopping-bag"></i> Đơn hàng
                                 </Link>
+                                <Link to="/order-tracking" className="dropdown-item">
+                                    <i className="fas fa-truck"></i> Theo dõi đơn hàng
+                                </Link>
                                 <a href="" className="dropdown-item" onClick={handleLogout}>
                                     <i className="fas fa-sign-out-alt"></i> Đăng xuất
                                 </a>
