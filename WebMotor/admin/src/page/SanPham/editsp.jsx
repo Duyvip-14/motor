@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import ImageUploader from '../../components/ImageUploader/ImageUploader';
+import BackButton from '../../components/BackButton/BackButton';
 
 const initiaState = {
     ten_san_pham: "",
@@ -26,7 +28,8 @@ const initiaState = {
     tieu_thu_nhien_lieu: "",
     khi_thai: "",
     he_thong_phun_xang: "",
-    anhhover1:""
+    anhhover1:"",
+    anhhover2:""
 };
 
 export default function Editsp() {
@@ -34,7 +37,7 @@ export default function Editsp() {
   const [state, setState] = useState(initiaState);
    const [danhmucList, setdanhmucList] = useState([]);  // state lưu danh sách 
 
-  const [file, setFile] = useState(null);
+
 
  const { ten_san_pham, gia, size, mau_sac, anh_sanpham, ma_danh_muc, soluong, mo_ta, dong_co, dung_tich, duong_kinh_hanh_trinh_piston, ti_so_nen, cong_suat_cuc_dai, mo_men_xoan_cuc_dai, bo_ly_hop, he_thong_danh_lua, he_thong_khoi_dong, hop_so, he_thong_truyen_dong, tieu_thu_nhien_lieu, khi_thai, he_thong_phun_xang,anhhover1 } = state;
 
@@ -66,12 +69,8 @@ export default function Editsp() {
     setState({...state,[name]:value});
   }
 
-  const handleFileChange = (e, type) => {
-    const file = e.target.files[0];
-    setFile(file);
-    setState({ ...state, [type]: `/images/${file.name}` });
-};
-;
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -92,6 +91,7 @@ export default function Editsp() {
 
   return (
     <div>
+    <BackButton />
       <h3 class="mb-0">Cập nhật sản phẩm</h3>
       <hr />
       <form onSubmit={handleSubmit} enctype="multipart/form-data">
@@ -227,31 +227,28 @@ export default function Editsp() {
         </div>
         
           <div className="row">
-              <img style={{borderRadius: '10px', marginLeft: '10px'}} src={state.anh_sanpham} width="150" height="180" className="img img-responsive" />
-              <div className="col mb-3">
-                <label className="form-label">Ảnh sản phẩm</label>
-                <input
-                  type="file"
-                  name="anh_sanpham"
-                  className="form-control"
-                  onChange={(e) => handleFileChange(e, 'anh_sanpham')}
-                  placeholder="Ảnh sản phẩm"
-                  readOnly
+              <div className="col-4 mb-3">
+                <ImageUploader
+                    label="Ảnh chính"
+                    name="anh_sanpham"
+                    value={state.anh_sanpham}
+                    onUploaded={(url) => setState(prev => ({...prev, anh_sanpham: url}))}
                 />
               </div>
-            </div>
-
-            <div className="row">
-              <img style={{borderRadius: '10px', marginLeft: '10px'}} src={state.anhhover1} width="150" height="180" className="img img-responsive" />
-              <div className="col mb-3">
-                <label className="form-label">Ảnh sản phẩm hover</label>
-                <input
-                  type="file"
-                  name="anhhover1"
-                  className="form-control"
-                  onChange={(e) => handleFileChange(e, 'anhhover1')}
-                  placeholder="Ảnh sản phẩm hover"
-                  readOnly
+              <div className="col-4 mb-3">
+                <ImageUploader
+                    label="Ảnh hover 1"
+                    name="anhhover1"
+                    value={state.anhhover1}
+                    onUploaded={(url) => setState(prev => ({...prev, anhhover1: url}))}
+                />
+              </div>
+              <div className="col-4 mb-3">
+                <ImageUploader
+                    label="Ảnh hover 2"
+                    name="anhhover2"
+                    value={state.anhhover2}
+                    onUploaded={(url) => setState(prev => ({...prev, anhhover2: url}))}
                 />
               </div>
             </div>

@@ -2,6 +2,8 @@ import axios from 'axios';
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import ImageUploader from '../../components/ImageUploader/ImageUploader';
+import BackButton from '../../components/BackButton/BackButton';
 
 const initiaState = {
     ma_san_pham:"",
@@ -26,10 +28,7 @@ export default function Createkhohang() {
       setState({...state,[name]:value});
     }
 
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        setState({ ...state, anh_sanpham: `/images/${file.name}` });
-      };
+
     
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -46,6 +45,7 @@ export default function Createkhohang() {
     }
   return (
     <div>
+      <BackButton />
       <h3 className="mb-0">Thêm sản phẩm vào kho</h3>
     <hr />
     <form onSubmit={handleSubmit}  enctype="multipart/form-data">
@@ -62,7 +62,12 @@ export default function Createkhohang() {
         </div>
         <div className='row mb-3'>
         <div className="col">
-                <input type="file" name="anh_sanpham" onChange={handleFileChange} className="form-control" placeholder="Ảnh sản phẩm"/>
+                <ImageUploader
+                    label="Ảnh sản phẩm"
+                    name="anh_sanpham"
+                    value={anh_sanpham}
+                    onUploaded={(url) => setState({...state, anh_sanpham: url})}
+                />
             </div>
         </div>
         <div class="row mb-3">

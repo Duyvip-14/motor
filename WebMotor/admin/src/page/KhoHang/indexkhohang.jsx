@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { Flip, toast } from 'react-toastify';
+import Pagination from '../../components/Pagination/Pagination';
 
 export default function Indexkhohang() {
 
@@ -126,29 +127,7 @@ export default function Indexkhohang() {
                     </tbody>
                 </table>
 
-                                                        <nav>
-                        <ul className="pagination justify-content-center mt-3">
-                            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                            <button className="page-link" onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)}>
-                                &laquo;
-                            </button>
-                            </li>
-
-                            {[...Array(totalPages).keys()].map(number => (
-                            <li key={number + 1} className={`page-item ${currentPage === number + 1 ? 'active' : ''}`}>
-                                <button onClick={() => setCurrentPage(number + 1)} className="page-link">
-                                {number + 1}
-                                </button>
-                            </li>
-                            ))}
-
-                            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                            <button className="page-link" onClick={() => currentPage < totalPages && setCurrentPage(currentPage + 1)}>
-                                &raquo;
-                            </button>
-                            </li>
-                        </ul>
-                    </nav>
+                                                        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
             </div>
         </div>
     </div>

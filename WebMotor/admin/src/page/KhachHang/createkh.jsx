@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import BackButton from '../../components/BackButton/BackButton';
 const initiaState = {
      ten_khach_hang:"",
      email:"",
@@ -40,6 +41,7 @@ export default function Createkh() {
 
   return (
    <div>
+    <BackButton />
     <h3 className="mb-0">Thêm khách hàng</h3>
     <hr />
     <form onSubmit={handleSubmit}  enctype="multipart/form-data">

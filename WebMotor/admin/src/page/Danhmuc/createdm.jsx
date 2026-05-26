@@ -3,6 +3,7 @@ import {Link ,useParams} from 'react-router-dom';
 import axios from 'axios';
 import {toast} from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import BackButton from '../../components/BackButton/BackButton';
 
 const initiaState = {
   ten_danh_muc :"",
@@ -41,6 +42,7 @@ export default function Createdm() {
 
   return (
     <div>
+      <BackButton />
       <h3 className="mb-0">Thêm danh mục</h3>
       <hr />
       <form onSubmit={handleSubmit} enctype="multipart/form-data">

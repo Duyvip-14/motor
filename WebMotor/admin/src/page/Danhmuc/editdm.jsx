@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import BackButton from '../../components/BackButton/BackButton';
 const initiaState = {
   ten_danh_muc :"",
 };
@@ -48,6 +49,7 @@ const handleSubmit = (e) => {
   return (
     <div>
           <div>
+              <BackButton />
               <h3 className="mb-0">Thêm danh mục</h3>
               <hr />
               <form onSubmit={handleSubmit} enctype="multipart/form-data">

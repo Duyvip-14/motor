@@ -2,6 +2,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import ImageUploader from '../../components/ImageUploader/ImageUploader';
+import BackButton from '../../components/BackButton/BackButton';
 const initiaState = {
     ten_san_pham: "",
     ngay_san_xuat: "",
@@ -12,7 +14,7 @@ const initiaState = {
 }
 export default function Editkhohang() {
     const [state, setState] = useState(initiaState);
-    const [file, setFile] = useState(null);
+
   
     const{ten_san_pham,ngay_san_xuat,so_luong,mau_sac,kich_co,anh_sanpham } = state;
   
@@ -31,11 +33,7 @@ export default function Editkhohang() {
       setState({...state,[name]:value});
     }
 
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        setFile(file);
-        setState({ ...state, anh_sanpham: `/images/${file.name}` });
-      };
+
     
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -54,6 +52,7 @@ export default function Editkhohang() {
     }
   return (
     <div>
+      <BackButton />
       <h1 class="mb-0">Cập nhật kho hàng</h1>
     <hr />
     <form onSubmit={handleSubmit}  enctype="multipart/form-data" >
@@ -85,10 +84,13 @@ export default function Editkhohang() {
             </div>
         </div>
         <div class="row">
-          <img style={{borderRadius: '10px',marginLeft:' 10px'}}  src={anh_sanpham}  width='150' height='180' class="img img-responsive" />
               <div class="col mb-3">
-                  <label class="form-label">Ảnh sản phẩm</label>
-                  <input type="file" name="anh_sanpham" class="form-control" onChange={handleFileChange} placeholder="Ảnh sản phẩm" readonly/>
+                <ImageUploader
+                    label="Ảnh sản phẩm"
+                    name="anh_sanpham"
+                    value={anh_sanpham}
+                    onUploaded={(url) => setState({...state, anh_sanpham: url})}
+                />
               </div>
               
               

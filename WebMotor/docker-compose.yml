@@ -34,5 +34,20 @@ services:
       mysql:
         condition: service_healthy
 
+  minio:
+    image: minio/minio:latest
+    container_name: webmotor-minio
+    restart: always
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+    ports:
+      - "19000:9000"   # S3 API
+      - "19001:9001"   # Console UI
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+
 volumes:
   mysql_data:
+  minio_data:

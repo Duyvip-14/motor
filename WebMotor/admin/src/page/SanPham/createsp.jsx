@@ -2,6 +2,8 @@ import React, { useState ,useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import ImageUploader from '../../components/ImageUploader/ImageUploader';
+import BackButton from '../../components/BackButton/BackButton';
 
 const initiaState = {
     ten_san_pham: "",
@@ -25,7 +27,9 @@ const initiaState = {
     he_thong_truyen_dong: "",
     tieu_thu_nhien_lieu: "",
     khi_thai: "",
-    he_thong_phun_xang: ""
+    he_thong_phun_xang: "",
+    anhhover1: "",
+    anhhover2: ""
 };
 
 export default function Createsp() {
@@ -83,10 +87,6 @@ const handleSubmit = (e) => {
 };
 
 
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        setState({ ...state, anh_sanpham: `/images/${file.name}` });
-      };
 
     const handleInputChange = (e) =>{
         const{name,value} = e.target;
@@ -96,6 +96,7 @@ const handleSubmit = (e) => {
     
   return (
     <div>
+    <BackButton />
     <h3 className="mb-0">Thêm sản phẩm</h3>
     <hr />
     <form onSubmit={handleSubmit} enctype="multipart/form-data">
@@ -118,9 +119,32 @@ const handleSubmit = (e) => {
 
         </div>
         <div className="row mb-3">
-            <div className="col">
-                <input type="file" name="anh_sanpham" onChange={handleFileChange} className="form-control" placeholder="Ảnh sản phẩm"/>
+            <div className="col-4">
+                <ImageUploader
+                    label="Ảnh chính"
+                    name="anh_sanpham"
+                    value={anh_sanpham}
+                    onUploaded={(url) => setState({...state, anh_sanpham: url})}
+                />
             </div>
+            <div className="col-4">
+                <ImageUploader
+                    label="Ảnh hover 1"
+                    name="anhhover1"
+                    value={state.anhhover1}
+                    onUploaded={(url) => setState({...state, anhhover1: url})}
+                />
+            </div>
+            <div className="col-4">
+                <ImageUploader
+                    label="Ảnh hover 2"
+                    name="anhhover2"
+                    value={state.anhhover2}
+                    onUploaded={(url) => setState({...state, anhhover2: url})}
+                />
+            </div>
+        </div>
+        <div className="row mb-3">
             <div className="col">
                         <select
                             name="ma_danh_muc"

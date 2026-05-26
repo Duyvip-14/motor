@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import BackButton from '../../components/BackButton/BackButton';
 export default function Viewsp() {
 
     const formatCurrency = (number) => {
@@ -17,6 +18,7 @@ export default function Viewsp() {
 
   return (
     <div>
+    <BackButton />
       <h3  class="mb-0">Thông tin : {sanpham.ten_san_pham}</h3>
     <hr/>
 

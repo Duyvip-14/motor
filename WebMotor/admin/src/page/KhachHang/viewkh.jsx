@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
+import BackButton from '../../components/BackButton/BackButton';
 
 export default function Viewkh() {
 
@@ -14,6 +15,7 @@ export default function Viewkh() {
   },[ma_khach_hang]);
   return (
     <div>
+      <BackButton />
       <h3 className="mb-0">Thông tin khách hàng</h3>
         <hr />
         <div className="row">

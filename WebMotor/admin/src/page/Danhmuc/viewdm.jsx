@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import BackButton from '../../components/BackButton/BackButton';
 import axios from "axios";
 
 export default function Viewdm() {
@@ -14,6 +15,7 @@ export default function Viewdm() {
 
   return (
     <div>
+      <BackButton />
       <h3 className="mb-0">Thông tin danh mục</h3>
       <hr />
       <div className="row">

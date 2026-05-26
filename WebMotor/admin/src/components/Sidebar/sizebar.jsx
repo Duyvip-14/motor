@@ -1,90 +1,90 @@
 import React, { Fragment } from 'react'
 import { Link } from 'react-router-dom'
 export default function Sizebar() {
-  return (
-    <Fragment>
+    return (
+        <Fragment>
 
 
-<ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+            <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-{/* <!-- Sidebar - Brand --> */}
-<a className="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-    <div className="sidebar-brand-icon rotate-n-15">
-        <i className="fas fa-laugh-wink"></i>
-    </div>
-    <div className="sidebar-brand-text mx-3">Motor <sup></sup></div>
-</a>
+                {/* <!-- Sidebar - Brand --> */}
+                <a className="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+                    <div className="sidebar-brand-icon rotate-n-15">
+                        <i className="fas fa-laugh-wink"></i>
+                    </div>
+                    <div className="sidebar-brand-text mx-3">Motor <sup></sup></div>
+                </a>
 
-{/* <!-- Divider --> */}
-<hr className="sidebar-divider my-0"/>
+                {/* <!-- Divider --> */}
+                <hr className="sidebar-divider my-0" />
 
-{/* <!-- Nav Item - Dashboard --> */}
-<li className="nav-item">
-    <Link className="nav-link" to="/">
-        <i className="fas fa-fw fa-tachometer-alt"></i>
-        <span>Thống kê</span></Link>
-</li>
+                {/* <!-- Nav Item - Dashboard --> */}
+                <li className="nav-item">
+                    <Link className="nav-link" to="/">
+                        <i className="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Thống kê</span></Link>
+                </li>
 
-{/* <!-- Divider --> */}
-<hr className="sidebar-divider"/>
+                {/* <!-- Divider --> */}
+                <hr className="sidebar-divider" />
 
-{/* <!-- Heading --> */}
-<div className="sidebar-heading">
-    
-</div>
+                {/* <!-- Heading --> */}
+                <div className="sidebar-heading">
 
-<li className="nav-item">
-    <Link className="nav-link" to="/Indexsp">
-        <i className="fas fa-motorcycle"></i>
-        <span>Sản phẩm</span>
-    </Link>
-</li>
+                </div>
+
+                <li className="nav-item">
+                    <Link className="nav-link" to="/Indexsp">
+                        <i className="fas fa-motorcycle"></i>
+                        <span>Sản phẩm</span>
+                    </Link>
+                </li>
 
 
-<li className="nav-item">
-    <Link className="nav-link" to="/Indexdm">
-        <i className="fas fa-tasks"></i>
-        <span>Danh mục</span></Link>
-</li>
+                <li className="nav-item">
+                    <Link className="nav-link" to="/Indexdm">
+                        <i className="fas fa-tasks"></i>
+                        <span>Danh mục</span></Link>
+                </li>
 
-<li className="nav-item">
-    <Link className="nav-link" to="/Indexhd">
-        <i className="fas fa-comments-dollar"></i>
-        <span>Đơn hàng</span></Link>
-</li>
+                <li className="nav-item">
+                    <Link className="nav-link" to="/Indexhd">
+                        <i className="fas fa-comments-dollar"></i>
+                        <span>Đơn hàng</span></Link>
+                </li>
 
-<li className="nav-item">
-    <Link className="nav-link" to="/Indexhdn">
-        <i className="fas fa-comments-dollar"></i>
-        <span>Hóa đơn nhập</span></Link>
-</li>
+                <li className="nav-item">
+                    <Link className="nav-link" to="/Indexhdn">
+                        <i className="fas fa-comments-dollar"></i>
+                        <span>Hóa đơn nhập</span></Link>
+                </li>
 
-<li className="nav-item">
-    <Link className="nav-link" to="/Indexkhohang">
-        <i className="fas fa-truck"></i>
-        <span>Kho hàng</span></Link>
-</li>
+                <li className="nav-item">
+                    <Link className="nav-link" to="/Indexkhohang">
+                        <i className="fas fa-truck"></i>
+                        <span>Kho hàng</span></Link>
+                </li>
 
-<li className="nav-item">
-    <Link className="nav-link" to="/Indexkh">
-        <i className="fas fa-user-friends"></i>
-        <span>Khách hàng</span></Link>
-</li>
+                <li className="nav-item">
+                    <Link className="nav-link" to="/Indexkh">
+                        <i className="fas fa-user-friends"></i>
+                        <span>Khách hàng</span></Link>
+                </li>
 
-<li className="nav-item">
-    <Link className="nav-link" to="/Indexnv">
-        <i className="fas fa-user-check"></i>
-        <span>Nhân viên</span></Link>
-</li>
+                <li className="nav-item">
+                    <Link className="nav-link" to="/Indexnv">
+                        <i className="fas fa-user-check"></i>
+                        <span>Nhân viên</span></Link>
+                </li>
 
-<li className="nav-item">
-    <Link className="nav-link" to="/Indextaikhoan">
-        <i className="fas fa-fw fa-cog"></i>
-        <span>Tài khoản</span></Link>
-</li>
+                <li className="nav-item">
+                    <Link className="nav-link" to="/Indextaikhoan">
+                        <i className="fas fa-fw fa-cog"></i>
+                        <span>Tài khoản</span></Link>
+                </li>
 
-{/* <!-- Nav Item - Utilities Collapse Menu --> */}
-<li className="nav-item">
+                {/* <!-- Nav Item - Utilities Collapse Menu --> */}
+                {/* <li className="nav-item">
     <a className="nav-link collapsed" href="" data-toggle="collapse" data-target="#collapseUtilities"
         aria-expanded="true" aria-controls="collapseUtilities">
         <i className="fas fa-fw fa-wrench"></i>
@@ -99,16 +99,16 @@ export default function Sizebar() {
 
         </div>
     </div>
-</li>
+</li> */}
 
-<hr className="sidebar-divider"/>
+                <hr className="sidebar-divider" />
 
-<div className="text-center d-none d-md-inline">
-    <button className="rounded-circle border-0" id="sidebarToggle"></button>
-</div>
+                <div className="text-center d-none d-md-inline">
+                    <button className="rounded-circle border-0" id="sidebarToggle"></button>
+                </div>
 
-</ul>
-       
-    </Fragment>
-  )
+            </ul>
+
+        </Fragment>
+    )
 }

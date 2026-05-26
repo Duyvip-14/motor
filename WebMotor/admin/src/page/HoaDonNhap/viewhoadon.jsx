@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
+import BackButton from '../../components/BackButton/BackButton';
 
 export default function Viewhoadonnhap() {
     const formatCurrency = (number) => {
@@ -20,6 +21,7 @@ export default function Viewhoadonnhap() {
     console.log(chiTiet)
   return (
     <div>
+    <BackButton />
             <div class="card shadow mb-4">
         <div class="d-flex align-items-center justify-content-between card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Chi tiết đơn hàng nhập</h6>

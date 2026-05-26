@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
+import BackButton from '../../components/BackButton/BackButton';
 
 export default function Viewkhohang() {
     const[khohang,setData] = useState({});
@@ -14,6 +15,7 @@ export default function Viewkhohang() {
 
   return (
     <div>
+        <BackButton />
         <h3 class="mb-0">Thông tin kho hàng</h3>
     <hr />
     <div className='row'>

@@ -2,6 +2,8 @@ import axios from 'axios';
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import ImageUploader from '../../components/ImageUploader/ImageUploader';
+import BackButton from '../../components/BackButton/BackButton';
 
 const initiaState = {
    ten_nhan_vien:"",
@@ -35,10 +37,7 @@ export default function Createnv() {
         }
     }
 
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        setState({ ...state, anh_nhanvien: `/images/${file.name}` });
-      };
+
 
     const handleInputChange = (e) =>{
         const{name,value} = e.target;
@@ -47,6 +46,7 @@ export default function Createnv() {
 
   return (
     <div>
+        <BackButton />
         <h3 class="mb-0">Thêm nhân viên</h3>
         <hr />
         <form onSubmit={handleSubmit}  enctype="multipart/form-data">
@@ -79,7 +79,12 @@ export default function Createnv() {
             <div class="row mb-3">
 
                 <div class="col">
-                    <input type="file" name="anh_nhanvien" onChange={handleFileChange} class="form-control" placeholder="Ảnh nhân viên"/>
+                    <ImageUploader
+                        label="Ảnh nhân viên"
+                        name="anh_nhanvien"
+                        value={anh_nhanvien}
+                        onUploaded={(url) => setState({...state, anh_nhanvien: url})}
+                    />
                 </div>
             </div>
 

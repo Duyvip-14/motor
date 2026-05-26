@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import BackButton from '../../components/BackButton/BackButton';
 
   const initiaState = {
     ten_khach :"",
@@ -90,6 +91,7 @@ const formatVND = (number) => {
 
   return (
     <div>
+      <BackButton />
       <h3 class="mb-0">Cập nhật đơn hàng</h3>
       <hr />
       <form onSubmit={handleSubmit} enctype="multipart/form-data">

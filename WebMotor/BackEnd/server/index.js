@@ -16,6 +16,7 @@ const ctdhRoutes = require('./routes/ctdhRoutes');
 const taikhoanRoutes = require('./routes/taikhoanRoute');
 const dathangRoutes = require('./routes/dathangRoute');
 const vnpayRoutes = require('./routes/vnpayRoute');
+const uploadRoutes = require('./routes/uploadRoute');
 
 app.use(cors());
 app.use(express.json());
@@ -33,6 +34,7 @@ app.use(ctdhRoutes);
 app.use(taikhoanRoutes);
 app.use(dathangRoutes);
 app.use(vnpayRoutes);
+app.use(uploadRoutes);
 
 
 

@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import BackButton from '../../components/BackButton/BackButton';
 
 const initiaState = {
     ten_khach_hang:"",
@@ -51,6 +52,7 @@ const handleSubmit = (e) => {
 
   return (
     <div>
+        <BackButton />
         <h1 className="mb-0">Cập nhật khách hàng</h1>
         <hr />
         <form onSubmit={handleSubmit} enctype="multipart/form-data" method="POST">

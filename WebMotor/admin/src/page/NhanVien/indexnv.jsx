@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { toast  ,Flip } from 'react-toastify';
+import Pagination from '../../components/Pagination/Pagination';
 export default function Indexnv() {
 
     const[data,setData] = useState([]);
@@ -109,7 +110,7 @@ export default function Indexnv() {
                                 <tr key={item.ma_nhan_vien}>
                                 <td>{index+1}</td>
                                 <td>{item.ma_nhan_vien}</td>
-                                <td><img style={{borderRadius:'5px'}} src={item.anh_nhanvien} width='60' height='60' className="img img-responsive" /></td>
+                                <td><img style={{borderRadius:'5px', objectFit:'cover', background:'#f3f4f6'}} src={item.anh_nhanvien} width='60' height='60' className="img img-responsive" onError={(e) => { e.target.onerror = null; e.target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"><rect fill="%23e5e7eb" width="60" height="60" rx="5"/><text x="50%25" y="55%25" dominant-baseline="middle" text-anchor="middle" fill="%239ca3af" font-size="24">👤</text></svg>'; }} /></td>
                                 <td>{item.ten_nhan_vien}</td>
                                 <td>{item.sdt}</td>
                                 <td><Link to={`/Viewnv/${item.ma_nhan_vien}`} type="button" className="btn btn-primary">Chi Tiết</Link></td>
@@ -126,29 +127,7 @@ export default function Indexnv() {
                     </tbody>
                 </table>
 
-                                                        <nav>
-                        <ul className="pagination justify-content-center mt-3">
-                            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                            <button className="page-link" onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)}>
-                                &laquo;
-                            </button>
-                            </li>
-
-                            {[...Array(totalPages).keys()].map(number => (
-                            <li key={number + 1} className={`page-item ${currentPage === number + 1 ? 'active' : ''}`}>
-                                <button onClick={() => setCurrentPage(number + 1)} className="page-link">
-                                {number + 1}
-                                </button>
-                            </li>
-                            ))}
-
-                            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                            <button className="page-link" onClick={() => currentPage < totalPages && setCurrentPage(currentPage + 1)}>
-                                &raquo;
-                            </button>
-                            </li>
-                        </ul>
-                    </nav>
+                                                        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
             </div>
         </div>
     </div>

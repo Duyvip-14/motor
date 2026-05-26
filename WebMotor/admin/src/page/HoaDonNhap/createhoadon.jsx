@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import BackButton from '../../components/BackButton/BackButton';
 
 const initialState = {
     ngay_nhap: new Date().toISOString().slice(0, 10),
@@ -95,6 +96,7 @@ export default function Createhdn() {
 
     return (
         <div>
+            <BackButton />
             <h3 className="mb-3">Tạo hóa đơn nhập</h3>
             <hr />
             <form onSubmit={handleSubmit}>

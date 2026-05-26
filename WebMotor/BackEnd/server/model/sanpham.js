@@ -26,7 +26,7 @@ const Product = {
 
 create: (productData, callback) => {
     const {
-        ten_san_pham, gia, size, mau_sac, anh_sanpham, ma_danh_muc, soluong, mo_ta,
+        ten_san_pham, gia, size, mau_sac, anh_sanpham, anhhover1, anhhover2, ma_danh_muc, soluong, mo_ta,
         dong_co, dung_tich, duong_kinh_hanh_trinh_piston, ti_so_nen,
         cong_suat_cuc_dai, mo_men_xoan_cuc_dai, bo_ly_hop,
         he_thong_danh_lua, he_thong_khoi_dong, hop_so,
@@ -35,17 +35,17 @@ create: (productData, callback) => {
 
     const sqlInsert = `
         INSERT INTO san_pham (
-            ten_san_pham, gia, size, mau_sac, anh_sanpham, ma_danh_muc, soluong, mo_ta,
+            ten_san_pham, gia, size, mau_sac, anh_sanpham, anhhover1, anhhover2, ma_danh_muc, soluong, mo_ta,
             dong_co, dung_tich, duong_kinh_hanh_trinh_piston, ti_so_nen,
             cong_suat_cuc_dai, mo_men_xoan_cuc_dai, bo_ly_hop,
             he_thong_danh_lua, he_thong_khoi_dong, hop_so,
             he_thong_truyen_dong, tieu_thu_nhien_lieu, khi_thai, he_thong_phun_xang
         )
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
     `;
 
     const values = [
-        ten_san_pham, gia, size, mau_sac, anh_sanpham, ma_danh_muc, soluong, mo_ta,
+        ten_san_pham, gia, size, mau_sac, anh_sanpham, anhhover1, anhhover2, ma_danh_muc, soluong, mo_ta,
         dong_co, dung_tich, duong_kinh_hanh_trinh_piston, ti_so_nen,
         cong_suat_cuc_dai, mo_men_xoan_cuc_dai, bo_ly_hop,
         he_thong_danh_lua, he_thong_khoi_dong, hop_so,
@@ -63,7 +63,7 @@ create: (productData, callback) => {
 
 update: (ma_san_pham, productData, callback) => {
     const {
-        ten_san_pham, gia, size, mau_sac, anh_sanpham, anhhover1, ma_danh_muc, soluong, mo_ta,
+        ten_san_pham, gia, size, mau_sac, anh_sanpham, anhhover1, anhhover2, ma_danh_muc, soluong, mo_ta,
         dong_co, dung_tich, duong_kinh_hanh_trinh_piston, ti_so_nen,
         cong_suat_cuc_dai, mo_men_xoan_cuc_dai, bo_ly_hop,
         he_thong_danh_lua, he_thong_khoi_dong, hop_so,
@@ -72,7 +72,7 @@ update: (ma_san_pham, productData, callback) => {
 
     const sqlUpdate = `
         UPDATE san_pham SET
-            ten_san_pham = ?, gia = ?, size = ?, mau_sac = ?, anh_sanpham = ?, anhhover1 = ?, 
+            ten_san_pham = ?, gia = ?, size = ?, mau_sac = ?, anh_sanpham = ?, anhhover1 = ?, anhhover2 = ?,
             ma_danh_muc = ?, soluong = ?, mo_ta = ?,
             dong_co = ?, dung_tich = ?, duong_kinh_hanh_trinh_piston = ?, ti_so_nen = ?,
             cong_suat_cuc_dai = ?, mo_men_xoan_cuc_dai = ?, bo_ly_hop = ?,
@@ -82,7 +82,7 @@ update: (ma_san_pham, productData, callback) => {
     `;
 
     const values = [
-        ten_san_pham, gia, size, mau_sac, anh_sanpham, anhhover1,
+        ten_san_pham, gia, size, mau_sac, anh_sanpham, anhhover1, anhhover2,
         ma_danh_muc, soluong, mo_ta,
         dong_co, dung_tich, duong_kinh_hanh_trinh_piston, ti_so_nen,
         cong_suat_cuc_dai, mo_men_xoan_cuc_dai, bo_ly_hop,

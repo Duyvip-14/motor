@@ -2,6 +2,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import ImageUploader from '../../components/ImageUploader/ImageUploader';
+import BackButton from '../../components/BackButton/BackButton';
 
 const initiaState = {
     ten_nhan_vien:"",
@@ -17,7 +19,7 @@ export default function Editnv() {
 
     const [state, setState] = useState(initiaState);
 
-    const [file, setFile] = useState(null);
+
   
     const{ten_nhan_vien ,gioi_tinh ,dia_chi ,ngay_sinh ,sdt ,cmnd ,anh_nhanvien } = state;
   
@@ -29,7 +31,14 @@ export default function Editnv() {
   
     useEffect(()=>{
       axios.get(`http://localhost:5000/api/getnv/${ma_nhan_vien}`)
-      .then((resp) => setState({...resp.data[0]}));
+      .then((resp) => {
+        const data = resp.data[0];
+        // Format ngay_sinh cho input type="date" (YYYY-MM-DD)
+        if (data.ngay_sinh) {
+          data.ngay_sinh = data.ngay_sinh.slice(0, 10);
+        }
+        setState({...data});
+      });
     },[ma_nhan_vien]);
     
     const handleInputChange = (e) =>{
@@ -37,11 +46,7 @@ export default function Editnv() {
       setState({...state,[name]:value});
     }
   
-    const handleFileChange = (e) => {
-      const file = e.target.files[0];
-      setFile(file);
-      setState({ ...state, anh_nhanvien: `/images/${file.name}` });
-    };
+
     
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -61,6 +66,7 @@ export default function Editnv() {
 
   return (
     <div>
+        <BackButton />
         <h1 class="mb-0">Cập nhật nhân viên</h1>
         <hr />
         <form onSubmit={handleSubmit} enctype="multipart/form-data">
@@ -97,8 +103,12 @@ export default function Editnv() {
             </div>
             <div class="row">
                 <div class="col mb-3">
-                    <label class="form-label">Ảnh nhân viên</label>
-                    <input type="file" name="anh_nhanvien" onChange={handleFileChange}  class="form-control" placeholder="Ảnh nhân viên"  readonly/>
+                    <ImageUploader
+                        label="Ảnh nhân viên"
+                        name="anh_nhanvien"
+                        value={anh_nhanvien}
+                        onUploaded={(url) => setState({...state, anh_nhanvien: url})}
+                    />
                 </div>
             </div>
             <div class="row">
