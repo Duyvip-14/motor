@@ -224,10 +224,14 @@ export default function Product() {
                                                 <div className="product-price-wrap">
                                                     <div className="product-price">{formatCurrency(item.gia)}</div>
                                                 </div>
-                                                <div className="product-discount">
-                                                    {item.thongbao}
-                                                </div>
-                                                <div className="sale-tag product-tag">{item.sale}</div>
+                                                {item.thongbao && (
+                                                    <div className="product-discount">
+                                                        {item.thongbao}
+                                                    </div>
+                                                )}
+                                                {item.sale && (
+                                                    <div className="sale-tag product-tag">{item.sale}</div>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
