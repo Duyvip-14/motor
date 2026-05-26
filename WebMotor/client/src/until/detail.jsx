@@ -29,19 +29,8 @@ function Payment() {
           })
       })
   
-      //quantity cart
-      var quantity = JSON.parse($(".quantity span").text())
-      $(".btn-increase").click(function(){
-          quantity = quantity+1
-          $(".quantity span").text(quantity)
-      })
-      $(".btn-decrease").click(function(){
-          if(quantity>1){
-              quantity = quantity-1
-              $(".quantity span").text(quantity)
-          }
-      })
-  
+      //quantity cart - đã chuyển sang React state, bỏ handler jQuery để tránh xung đột
+
       function changeColor(src){
           //Thay đổi phụ
           $(".content__color-heading b").text(src.color)

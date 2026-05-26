@@ -14,6 +14,19 @@ export default function Details() {
     const [allsanPhamSoSanh, setallSanPhamSoSanh] = useState(null);
     const [sanPhamSoSanh, setSanPhamSoSanh] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
+    const [quantity, setQuantity] = useState(1);
+
+    const maxQty = parseInt(sanpham.soluong) || 0;
+    const handleDecrease = () => setQuantity(q => Math.max(1, q - 1));
+    const handleIncrease = () => setQuantity(q => (maxQty > 0 ? Math.min(maxQty, q + 1) : q + 1));
+
+    useEffect(() => {
+        window.__detailCartQty = quantity;
+    }, [quantity]);
+
+    useEffect(() => {
+        return () => { window.__detailCartQty = undefined; };
+    }, []);
     
     console.log(sanPhamSoSanh)
 
@@ -122,9 +135,9 @@ export default function Details() {
                             <div class="product-single__actions">
                                 <div class="quantity">
 
-                                    <button class="btn-decrease" disabled={parseInt(sanpham.soluong) <= 0}>-</button>
-                                    <span>1</span>
-                                    <button class="btn-increase" disabled={parseInt(sanpham.soluong) <= 0}>+</button>
+                                    <button class="btn-decrease" onClick={handleDecrease} disabled={parseInt(sanpham.soluong) <= 0 || quantity <= 1}>-</button>
+                                    <span>{quantity}</span>
+                                    <button class="btn-increase" onClick={handleIncrease} disabled={parseInt(sanpham.soluong) <= 0 || quantity >= maxQty}>+</button>
                                 </div>
                                 {parseInt(sanpham.soluong) <= 0 ? (
                                     <div

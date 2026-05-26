@@ -17,7 +17,7 @@ function AddProduct() {
           for (let x of list) {
               if (x.id === item.id && x.color === item.color && x.size === item.size) {
 
-                  x.quantity += 1;
+                  x.quantity += item.quantity;
                   check = false;
                   break;
               }
@@ -39,6 +39,10 @@ function AddProduct() {
           var color = $(".content__color-heading b").text();
           var size = $(".btn-size.active").text();
           var price = convertToNumber($(".content__price").text());
+          var qty = parseInt(window.__detailCartQty, 10);
+          if (!qty || qty < 1) {
+              qty = parseInt($(".quantity span").text(), 10) || 1;
+          }
 
           // Lấy mã sản phẩm (ma_san_pham) từ URL trang chi tiết sản phẩm
           var ma_san_pham = window.location.pathname.split('/').pop(); // Lấy phần cuối cùng của đường dẫn URL
@@ -50,7 +54,7 @@ function AddProduct() {
               color: color,
               size: size,
               price: price,
-              quantity: 1, // Số lượng mặc định thêm vào giỏ hàng là 1
+              quantity: qty,
               discount: 0
           };
 
