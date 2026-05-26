@@ -10,10 +10,12 @@ export function LoadData() {
   var discount = vocher && vocher.value ? vocher.value : 0;
   var tamtinh = 0;
   for (let x of list) {
-    // Sửa 'x of list' thành 'let x of list'
-    total += x.price * x.quantity - discount;
-    console.log(total)
     tamtinh += x.price * x.quantity;
+  }
+  // Trừ discount 1 lần cho toàn đơn hàng
+  total = tamtinh - discount;
+  if (total < 0) total = 0;
+  for (let x of list) {
     str += `<div class="list-product__item">
       <div class="list-product__item-img">
         <img src="${x.img}" alt="">

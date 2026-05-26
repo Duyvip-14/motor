@@ -24,46 +24,58 @@ export default function Home() {
         navigate(`/product?keyword=${encodeURIComponent(keyword)}`);
     };
 
-   const coupons = [
-    {
-        coupon_name: "XE150K",
-        discount_amount: 1500,
-        remaining_count: 30,
-        description: "Giảm ngay 1.500.000đ khi mua xe motor mới từ ngày 15-06",
-        value: 1500000,
-        expiry_date: "10-06-2026"
-    },
-    {
-        coupon_name: "PK150K",
-        discount_amount: 150,
-        remaining_count: 0,
-        description: "Ưu đãi 150.000đ cho đơn hàng phụ kiện từ 2 triệu (không áp dụng combo)",
-        value: 150000,
-        expiry_date: "20-06-2026"
-    },
-    {
-        coupon_name: "MBH100K",
-        discount_amount: 100,
-        remaining_count: 60,
-        description: "Giảm 100.000đ khi mua phụ kiện từ 500.000đ",
-        value: 100000,
-        expiry_date: "19-06-2026"
-    },
-    {
-        coupon_name: "AO50K",
-        discount_amount: 50,
-        remaining_count: 25,
-        description: "Ưu đãi 500.000đ khi mua áo khoác hoặc găng tay từ 3.000.000đ",
-        value: 500000,
-        expiry_date: "25-06-2026"
-    },
+   // Dữ liệu gốc các coupon
+    const defaultCoupons = [
+        {
+            coupon_name: "XE150K",
+            discount_amount: 1500,
+            remaining_count: 30,
+            description: "Giảm ngay 1.500.000đ khi mua xe motor mới từ ngày 15-06",
+            value: 1500000,
+            expiry_date: "10-06-2026"
+        },
+        {
+            coupon_name: "PK150K",
+            discount_amount: 150,
+            remaining_count: 0,
+            description: "Ưu đãi 150.000đ cho đơn hàng phụ kiện từ 2 triệu (không áp dụng combo)",
+            value: 150000,
+            expiry_date: "20-06-2026"
+        },
+        {
+            coupon_name: "MBH100K",
+            discount_amount: 100,
+            remaining_count: 60,
+            description: "Giảm 100.000đ khi mua phụ kiện từ 500.000đ",
+            value: 100000,
+            expiry_date: "19-06-2026"
+        },
+        {
+            coupon_name: "AO50K",
+            discount_amount: 50,
+            remaining_count: 25,
+            description: "Ưu đãi 500.000đ khi mua áo khoác hoặc găng tay từ 3.000.000đ",
+            value: 500000,
+            expiry_date: "25-06-2026"
+        },
     ];
+
+    // Load remaining_count từ localStorage (đã trừ sau mỗi lần lưu)
+    const getInitialCoupons = () => {
+        const savedRemaining = JSON.parse(localStorage.getItem("coupon_remaining")) || {};
+        return defaultCoupons.map(c => ({
+            ...c,
+            remaining_count: savedRemaining[c.coupon_name] !== undefined 
+                ? savedRemaining[c.coupon_name] 
+                : c.remaining_count
+        }));
+    };
+
+    const [coupons, setCoupons] = useState(getInitialCoupons);
 
       
       const handleSaveCoupon = (coupon) => {
-        console.log('đã click')
         if(!user){
-            console.log('ko lưu đk')
             toast.error(`Hãy đăng nhập để lưu mã giảm giá!`, {
                 position: "top-right",
                 autoClose: 1000,
@@ -74,10 +86,12 @@ export default function Home() {
                 progress: undefined,
                 theme: "light",
             });
+            return;
         }
-        else{ 
-            if(coupon.remaining_count === 0){
-                 toast.error(`Mã giảm giá này đã hết số lượng!`, {
+
+        // Kiểm tra hết lượt
+        if(coupon.remaining_count <= 0){
+            toast.error(`Mã giảm giá này đã hết số lượng!`, {
                 position: "top-right",
                 autoClose: 1000,
                 hideProgressBar: false,
@@ -88,22 +102,54 @@ export default function Home() {
                 theme: "light",
             });
             return;
-            }
-            const savedCoupons = JSON.parse(localStorage.getItem("coupons")) || [];
-            savedCoupons.push({ ...coupon, id_user:user.id });
-            localStorage.setItem("coupons", JSON.stringify(savedCoupons));
-            toast.success(`Mã giảm giá "${coupon.coupon_name}" đã được lưu!`, {
+        }
+
+        // Kiểm tra user đã lưu mã này chưa
+        const savedCoupons = JSON.parse(localStorage.getItem("coupons")) || [];
+        const alreadySaved = savedCoupons.some(
+            c => c.coupon_name === coupon.coupon_name && c.id_user === user.id
+        );
+        if (alreadySaved) {
+            toast.warning(`Bạn đã lưu mã "${coupon.coupon_name}" rồi!`, {
                 position: "top-right",
-                autoClose: 500,
+                autoClose: 1000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
                 theme: "light",
-                });
+            });
+            return;
         }
-        
+
+        // Trừ remaining_count
+        const newRemaining = coupon.remaining_count - 1;
+        const updatedCoupons = coupons.map(c =>
+            c.coupon_name === coupon.coupon_name
+                ? { ...c, remaining_count: newRemaining }
+                : c
+        );
+        setCoupons(updatedCoupons);
+
+        // Lưu remaining vào localStorage
+        const savedRemaining = JSON.parse(localStorage.getItem("coupon_remaining")) || {};
+        savedRemaining[coupon.coupon_name] = newRemaining;
+        localStorage.setItem("coupon_remaining", JSON.stringify(savedRemaining));
+
+        // Lưu coupon cho user
+        savedCoupons.push({ ...coupon, remaining_count: newRemaining, id_user: user.id });
+        localStorage.setItem("coupons", JSON.stringify(savedCoupons));
+        toast.success(`Mã giảm giá "${coupon.coupon_name}" đã được lưu!`, {
+            position: "top-right",
+            autoClose: 500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
       };
 
     const loadData = async() =>{
