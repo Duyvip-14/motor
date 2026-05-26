@@ -20,7 +20,15 @@ const Account = {
                 if (error) {
                     return callback(error);
                 }
-                callback(null, result);
+                
+                const sqlInsertCustomer = "INSERT INTO khach_hang (ten_khach_hang, email, so_dien_thoai, dia_chi) VALUES (?, ?, ?, ?)";
+                const dia_chi = "";
+                db.query(sqlInsertCustomer, [ten_nguoi_dung, email, sdt, dia_chi], (errCustomer, resultCustomer) => {
+                    if (errCustomer) {
+                        console.error("Lỗi khi tạo thông tin khách hàng:", errCustomer);
+                    }
+                    callback(null, result);
+                });
             });
         });
     },
