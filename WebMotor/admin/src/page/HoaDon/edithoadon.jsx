@@ -161,7 +161,7 @@ const formatVND = (number) => {
 
                 <div className="row">
                   <div className="col mb-3">
-                    <label className="form-label">Trạng thái thanh toán</label>
+                    <label className="form-label">Phương thức thanh toán</label>
                     <select
                         name="combined_thanh_toan"
                         className="form-control"
@@ -175,7 +175,7 @@ const formatVND = (number) => {
                         });
                         }}
                     >
-                        <option value="1|BuyLate">Chưa thanh toán</option>
+                        {/* <option value="1|BuyLate">Chưa thanh toán</option> */}
                         <option value="2|VnPay">Đã thanh toán qua VnPay</option>
                         <option value="2|BuyLate">Đã thanh toán bằng tiền mặt</option>
                     </select>
