@@ -139,7 +139,7 @@ html{
 
 /* hover đổi màu cho menu */
 .site-header:hover .topbar{
-    background-color: #cc6666;
+    background-color: #e3d620;
     color: #1c1404;
 }
 .site-header:hover .header-inner{

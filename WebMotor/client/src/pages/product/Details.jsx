@@ -194,7 +194,7 @@ export default function Details() {
                                 <div class="product-policy__icon">
                                     <img src="https://www.coolmate.me/images/icons/icon6.svg" alt=""/>
                                 </div>
-                                <p>Giao hàng 2-5 ngày(có thể lâu hơn do Covid19)</p>
+                                <p>Giao hàng 2-5 ngày</p>
                             </div>
                         </div>
 

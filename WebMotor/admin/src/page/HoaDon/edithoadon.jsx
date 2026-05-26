@@ -176,8 +176,8 @@ const formatVND = (number) => {
                         }}
                     >
                         {/* <option value="1|BuyLate">Chưa thanh toán</option> */}
-                        <option value="2|VnPay">Đã thanh toán qua VnPay</option>
-                        <option value="2|BuyLate">Đã thanh toán bằng tiền mặt</option>
+                        <option value="2|VnPay">Thanh toán qua VnPay</option>
+                        <option value="2|BuyLate">Thanh toán bằng tiền mặt</option>
                     </select>
                     </div>
 

@@ -31,7 +31,7 @@ export default function Home() {
         remaining_count: 30,
         description: "Giảm ngay 1.500.000đ khi mua xe motor mới từ ngày 15-06",
         value: 1500000,
-        expiry_date: "10-06-2025"
+        expiry_date: "10-06-2026"
     },
     {
         coupon_name: "PK150K",
@@ -39,7 +39,7 @@ export default function Home() {
         remaining_count: 0,
         description: "Ưu đãi 150.000đ cho đơn hàng phụ kiện từ 2 triệu (không áp dụng combo)",
         value: 150000,
-        expiry_date: "20-06-2025"
+        expiry_date: "20-06-2026"
     },
     {
         coupon_name: "MBH100K",
@@ -47,7 +47,7 @@ export default function Home() {
         remaining_count: 60,
         description: "Giảm 100.000đ khi mua phụ kiện từ 500.000đ",
         value: 100000,
-        expiry_date: "19-06-2025"
+        expiry_date: "19-06-2026"
     },
     {
         coupon_name: "AO50K",
@@ -55,7 +55,7 @@ export default function Home() {
         remaining_count: 25,
         description: "Ưu đãi 500.000đ khi mua áo khoác hoặc găng tay từ 3.000.000đ",
         value: 500000,
-        expiry_date: "25-06-2025"
+        expiry_date: "25-06-2026"
     },
     ];
 
@@ -247,7 +247,7 @@ export default function Home() {
                 </section>
                 <section>
                 <div className="container1">
-                <div className="homepage-product__heading"> Motorbike Supper Day</div>
+                <div className="homepage-product__heading"> Motorbike Super Day</div>
                     <div className="product-type">
                         <div className="row">
                             {/* Sản phẩm mẫu */}
@@ -515,11 +515,11 @@ export default function Home() {
                                     <img style={{width: '90%'}} src="../Images/kawasakitet.jpg" alt=""/>
                                 </div>
                                 <div className="homepage-brands__content" style={{color: 'red'}}>
-                                    <h2> 84RISING*</h2>
+                                    <h2> Ninja H2R</h2>
                                     <p>
-                                        Xe đẹp dành cho giới trẻ
+                                        Xe đẹp dành cho giới trẻ genz 
                                         <br className="mobile--hidden"/>
-                                        <b style={{fontSize: '130%'}}>Xe đẹp đón tết </b>
+                                        <b style={{fontSize: '130%'}}>Người đẹp đi cùng xe đẹp </b>
                                     </p>
                                     <a href="#" className="btn-brands"> Mua ngay</a>
                                 </div>
@@ -531,9 +531,9 @@ export default function Home() {
                                 <div className="homepage-brands__content" style={{color: 'red'}}>
                                     <h2> CM24</h2>
                                     <p>
-                                        Tết du xuân cùng biker đi mọi nơi
+                                        Các mẫu xe phù hợp cho học sinh, sinh viên
                                         <br className="mobile--hidden"/>
-                                        <b style={{fontSize: '130%'}}>Xe chất đón tết </b>
+                                        <b style={{fontSize: '130%'}}>Xe đẹp chào hè cùng đi mọi cung đường </b>
                                     </p>
                                     <a href="#" className="btn-brands"> Mua ngay</a>
                                 </div>

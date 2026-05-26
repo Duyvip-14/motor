@@ -112,7 +112,7 @@ export default function InfoPage() {
   const data = CONTENT[topic] || CONTENT.faq;
 
   return (
-    <div className="info-page" style={{ width: '100%', maxWidth: 900, margin: '40px auto', padding: '0 20px 60px' }}>
+    <div className="info-page" style={{ width: '100%', maxWidth: 900, margin: '40px auto', padding: '90px 20px 60px' }}>
       <div style={{ marginBottom: 24 }}>
         <Link to="/" style={{ color: '#2F5ACF', fontSize: 14 }}>
           <i className="fa-solid fa-arrow-left" style={{ marginRight: 6 }}></i>
