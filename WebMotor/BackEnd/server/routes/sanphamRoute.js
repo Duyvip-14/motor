@@ -9,6 +9,7 @@ router.put('/api/updatesp/:ma_san_pham', productController.updateProduct);
 router.delete('/api/deletesp/:ma_san_pham', productController.deleteProduct);
 router.get('/api/searchsp/:searchTerm', productController.searchProductByName);
 router.get('/api/searchgdvprice', productController.searchServiceByPriceAndName);
+router.get('/api/products-by-category', productController.getProductsByCategory);
 
 
 module.exports = router;

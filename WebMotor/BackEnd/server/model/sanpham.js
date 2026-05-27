@@ -121,6 +121,34 @@ update: (ma_san_pham, productData, callback) => {
         });
     },
 
+    getProductsByCategory: (callback) => {
+        const sql = `
+            SELECT sp.*, dm.ten_danh_muc
+            FROM san_pham sp
+            INNER JOIN danh_muc_san_pham dm ON sp.ma_danh_muc = dm.ma_danh_muc
+            ORDER BY dm.ma_danh_muc, sp.ma_san_pham
+        `;
+        db.query(sql, (error, results) => {
+            if (error) {
+                return callback(error);
+            }
+            // Group products by category
+            const grouped = {};
+            results.forEach(product => {
+                const catId = product.ma_danh_muc;
+                if (!grouped[catId]) {
+                    grouped[catId] = {
+                        ma_danh_muc: catId,
+                        ten_danh_muc: product.ten_danh_muc,
+                        products: []
+                    };
+                }
+                grouped[catId].products.push(product);
+            });
+            callback(null, Object.values(grouped));
+        });
+    },
+
     searchByPriceAndName: (minPrice, maxPrice, id_danh_muc, callback) => {
         let sqlSearch = "SELECT * FROM san_pham WHERE gia BETWEEN ? AND ?";
         let queryParams = [minPrice, maxPrice];

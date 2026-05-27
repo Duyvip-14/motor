@@ -77,3 +77,12 @@ exports.searchServiceByPriceAndName = (req, res) => {
         res.send(result); // Trả kết quả nếu không có lỗi
     });
 };
+
+exports.getProductsByCategory = (req, res) => {
+    Product.getProductsByCategory((err, result) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        res.json(result);
+    });
+};

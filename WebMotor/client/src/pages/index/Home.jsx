@@ -8,6 +8,7 @@ import { useUser } from '../../until/userContext';
 export default function Home() {
     AddProduct();
     const [data,setData] = useState([]);
+    const [categoryProducts, setCategoryProducts] = useState([]);
     const [homeSearch, setHomeSearch] = useState('');
     const navigate = useNavigate();
 
@@ -157,71 +158,24 @@ export default function Home() {
         setData(response.data);
     };
 
+    const loadCategoryProducts = async() =>{
+        try {
+            const response = await axios.get("http://localhost:5000/api/products-by-category");
+            setCategoryProducts(response.data);
+        } catch (error) {
+            console.error("Lỗi khi tải sản phẩm theo danh mục:", error);
+        }
+    };
+
     useEffect(()=>{
         loadData();
+        loadCategoryProducts();
     },[]);
 
     const formatCurrency = (number) => {
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(number);
     };  
 
-    const accessoriesData = [
-        {
-          id: '89',
-          name: 'Gương xe máy cao cấp',
-          priceNew: 120000,
-          priceOld: 150000,
-          discountPercent: '-20%',
-          mau_sac:'Đen',
-          description: 'Gương lớn, nhìn rõ, xoay 360 độ',
-          image: '/Images/guong.jpg',
-          sizes: ['S', 'M', 'L']
-        },
-        {
-          id: '90',
-          name: 'Pô độ thể thao',
-          priceNew: 890000,
-          priceOld: 1100000,
-          discountPercent: '-19%',
-          mau_sac:'Đen',
-          description: 'Tiếng pô trầm ấm, không bị hú',
-          image: '/Images/poxe.jpg',
-          sizes: ['S', 'XL', '2XL']
-        },
-        {
-          id: '91',
-          name: 'Tay côn CNC',
-          priceNew: 260000,
-          priceOld: 320000,
-          discountPercent: '-19%',
-          mau_sac:'Đen đỏ',
-          description: 'Hợp kim nhôm chắc chắn',
-          image: '/Images/taycon.jpg',
-          sizes: ['15', '17', '19', '21', '23']
-        },
-        {
-          id: '92',
-          name: 'Tay phanh RCB',
-          priceNew: 370000,
-          priceOld: 450000,
-          discountPercent: '-18%',
-          mau_sac:'Đỏ',
-          description: 'Thắng êm, tăng chỉnh đa nấc',
-          image: '/Images/tayphanh.jpg',
-          sizes: ['15', '17', '19', '21', '23']
-        },
-        {
-          id: '93',
-          name: 'Thùng xe + Baga',
-          priceNew: 650000,
-          priceOld: 800000,
-          discountPercent: '-19%',
-          mau_sac:'Đen',
-          description: 'Chở đồ tiện lợi, khung sắt bền chắc',
-          image: '/Images/thungxe1.jpg',
-          sizes: ['4x4', '5x5', '4,5x5']
-        }
-      ];
   return (
         <Fragment>
             <div className="main">
@@ -352,184 +306,47 @@ export default function Home() {
                 </div>
                 </section>
 
-                <section className="homepage-product">
-                    <div className="container">
-                        <div className="homepage-product__heading">Phụ kiện giá tốt</div>
-                        <div className="bestseller__content active">
-                        <div className="row">
-                        {accessoriesData.map((item) => (
-                            <div key={item.id} className="col p-2-4">
-                            <div id={`${item.id}`} className="product">
-                                <div className="product-img-wrap" style={{ marginBottom: '8px' }}>
-                                <Link to={`/detail/${item.id}`} className="product-img product-img--small">
-                                    <img className="product-img-1" src={item.image} alt="" />
-                                    <img className="product-img-2" src={item.image} alt="" />
-                                </Link>
-                                <div className="product-size">
-                                    <p>Thêm nhanh vào giỏ hàng +</p>
-                                    {item.sizes.map((size, index) => (
-                                    <div
-                                        key={index}
-                                        className="btn btn--size"
-                                    >
-                                        {size}
-                                    </div>
+                {/* Render sản phẩm theo từng danh mục từ database */}
+                {categoryProducts.map((category) => (
+                    <section key={category.ma_danh_muc} className="homepage-product">
+                        <div className="container">
+                            <div className="homepage-product__heading">{category.ten_danh_muc}</div>
+                            <div className="bestseller__content active">
+                                <div className="row">
+                                    {category.products.slice(0, 5).map((item) => (
+                                        <div key={item.ma_san_pham} className="col p-2-4">
+                                            <div id={`${item.ma_san_pham}`} className="product">
+                                                <div className="product-img-wrap" style={{ marginBottom: '8px' }}>
+                                                    <Link to={`/detail/${item.ma_san_pham}`} className="product-img product-img--small">
+                                                        <img className="product-img-1" src={item.anh_sanpham} alt={item.ten_san_pham} />
+                                                        <img className="product-img-2" src={item.anhhover1 || item.anh_sanpham} alt={item.ten_san_pham} />
+                                                    </Link>
+                                                    <div className="product-size">
+                                                        <p>Thêm nhanh vào giỏ hàng +</p>
+                                                    </div>
+                                                </div>
+                                                <div className="product-content">
+                                                    <div style={{ display: 'none' }} className="product-content__option">
+                                                        <div className="product-content__option-item-wrap active">
+                                                            <span data={item.mau_sac}></span>
+                                                        </div>
+                                                    </div>
+                                                    <Link to={`/detail/${item.ma_san_pham}`} className="product-name">{item.ten_san_pham}</Link>
+                                                    <div className="product-price-wrap">
+                                                        <div className="product-price">{formatCurrency(item.gia)}</div>
+                                                    </div>
+                                                    {item.mo_ta && (
+                                                        <div className="product-discount">{item.mo_ta}</div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
                                     ))}
                                 </div>
-                                </div>
-                                <div className="product-content">
-                                <div style={{ display: 'none' }} className="product-content__option ">
-                                                <div className="product-content__option-item-wrap active">
-                                                    <span data={item.mau_sac}></span>
-                                                </div>
-                                </div>
-                                <Link to={`/detail/${item.id}`} className="product-name">{item.name}</Link>
-                                <div className="product-price-wrap">
-                                    <div className="product-price-new">{item.priceNew.toLocaleString()}đ</div>
-                                    <div className="product-price">{item.priceOld.toLocaleString()}đ</div>
-                                    <div className="product-percent">{item.discountPercent}</div>
-                                </div>
-                                <div className="product-discount">{item.description}</div>
-                                </div>
-                            </div>
-                            </div>
-                        ))}
-                </div>
-
-                        </div>
-
-                    </div>
-                </section>
-
-                <section className="homepage-product">
-                <div className="container">
-                <div className="homepage-product__heading">Running Biker</div>
-                <div className="bestseller__content active">
-                    <div className="row">
-                        {/* Sản phẩm 1 */}
-                        <div className="col p-2-4">
-                            <div  className="product">
-                                <div className="product-img-wrap" style={{ marginBottom: '8px' }}>
-                                    <Link to="/detail/1" className="product-img product-img--small">
-                                        <img className="product-img-1" src="/Images/kawasaki1.jpg" alt="Kawasaki H2R" />
-                                        <img className="product-img-2" src="/Images/kawasaki1-1.jpg" alt="Kawasaki H2R" />
-                                    </Link>
-                                    <div className="product-size">
-                                        <p>Thêm nhanh vào giỏ hàng +</p>
-                                    </div>
-                                </div>
-                                <div className="product-content">
-                                    <Link to="/detail/1" className="product-name">Kawasaki H2R</Link>
-                                    <div className="product-price-wrap">
-                                        <div className="product-price-new">380,200,000đ</div>
-                                        <div className="product-price">390,800,000đ</div>
-                                        <div className="product-percent">-16%</div>
-                                    </div>
-                                    <div className="product-discount">Mua ngay để nhận ưu đãi đặc biệt!</div>
-                                </div>
                             </div>
                         </div>
-
-                        {/* Sản phẩm 2 */}
-                        <div className="col p-2-4">
-                            <div className="product">
-                                <div className="product-img-wrap" style={{ marginBottom: '8px' }}>
-                                    <Link to="/detail/2" className="product-img product-img--small">
-                                        <img className="product-img-1" src="/Images/kawasaki2.jpg" alt="Kawasaki Ninja 400" />
-                                        <img className="product-img-2" src="/Images/kawasaki2-2.jpg" alt="Kawasaki Ninja 400" />
-                                    </Link>
-                                    <div className="product-size">
-                                        <p>Thêm nhanh vào giỏ hàng +</p>
-                                    </div>
-                                </div>
-                                <div className="product-content">
-                                    <Link to="/detail/2" className="product-name">Kawasaki Ninja 400</Link>
-                                    <div className="product-price-wrap">
-                                        <div className="product-price-new">200,700,000đ</div>
-                                        <div className="product-price">220,200,000đ</div>
-                                        <div className="product-percent">-15%</div>
-                                    </div>
-                                    <div className="product-discount">Giảm thêm 5% khi mua phụ kiện đôi!</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Sản phẩm 3 */}
-                        <div className="col p-2-4">
-                            <div className="product">
-                                <div className="product-img-wrap" style={{ marginBottom: '8px' }}>
-                                    <Link to="/detail/3" className="product-img product-img--small">
-                                        <img className="product-img-1" src="/Images/kawasaki3.jpg" alt="Kawasaki Versys 1000" />
-                                        <img className="product-img-2" src="/Images/kawasaki3-3.jpg" alt="Kawasaki Versys 1000" />
-                                    </Link>
-                                    <div className="product-size">
-                                        <p>Thêm nhanh vào giỏ hàng +</p>
-                                    </div>
-                                </div>
-                                <div className="product-content">
-                                    <Link to="/detail/3" className="product-name">Kawasaki Versys 1000</Link>
-                                    <div className="product-price-wrap">
-                                        <div className="product-price-new">94,500,000đ</div>
-                                        <div className="product-price">105,200,000đ</div>
-                                        <div className="product-percent">-13%</div>
-                                    </div>
-                                    <div className="product-discount">Tặng kèm tất Nike hôm nay!</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Sản phẩm 4 */}
-                        <div className="col p-2-4">
-                            <div className="product">
-                                <div className="product-img-wrap" style={{ marginBottom: '8px' }}>
-                                    <Link to="/detail/4" className="product-img product-img--small">
-                                        <img className="product-img-1" src="/Images/ducati1.jpg" alt="Ducati Streetfighter V2" />
-                                        <img className="product-img-2" src="/Images/ducati1.jpg" alt="Ducati Streetfighter V2" />
-                                    </Link>
-                                    <div className="product-size">
-                                        <p>Thêm nhanh vào giỏ hàng +</p>
-                                    </div>
-                                </div>
-                                <div className="product-content">
-                                    <Link to="/detail/4" className="product-name">Ducati Streetfighter V2</Link>
-                                    <div className="product-price-wrap">
-                                        <div className="product-price-new">103,800,000đ</div>
-                                        <div className="product-price">124,200,000đ</div>
-                                        <div className="product-percent">-10%</div>
-                                    </div>
-                                    <div className="product-discount">Mua ngay để nhận quà tặng!</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Sản phẩm 5 */}
-                        <div className="col p-2-4">
-                            <div className="product">
-                                <div className="product-img-wrap" style={{ marginBottom: '8px' }}>
-                                    <Link to="/detail/5" className="product-img product-img--small">
-                                        <img className="product-img-1" src="/Images/ducati2.jpg" alt="Ducati DesertX" />
-                                        <img className="product-img-2" src="/Images/ducati2.jpg" alt="Ducati DesertX" />
-                                    </Link>
-                                    <div className="product-size">
-                                        <p>Thêm nhanh vào giỏ hàng +</p>
-                                    </div>
-                                </div>
-                                <div className="product-content">
-                                    <Link to="/detail/5" className="product-name">Ducati DesertX</Link>
-                                    <div className="product-price-wrap">
-                                        <div className="product-price-new">92,500,000đ</div>
-                                        <div className="product-price">103,000,000đ</div>
-                                        <div className="product-percent">-17%</div>
-                                    </div>
-                                    <div className="product-discount">Giảm thêm 10% thanh toán online!</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-                </section>
+                    </section>
+                ))}
                 
                 <section className="homepage-basic">
                     <div className="homepage-basic__wrapper">
