@@ -141,7 +141,7 @@ export default function Thongke() {
               <div style={{ display: 'flex', alignItems: 'flex-end', gap: 12, height: 260, padding: '8px 0' }}>
                 {donHangByMonth.map((v, i) => (
                   <div key={i} style={{ flex: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', height: '100%' }}>
-                    <div style={{ fontSize: 11, color: '#888', marginBottom: 4 }}>{v}</div>
+                    <div style={{ fontSize: 16, color: '#888', marginBottom: 4 }}>{v}</div>
                     <div
                       style={{
                         background: `linear-gradient(180deg, ${COLORS.primary} 0%, #6e8af0 100%)`,
@@ -151,7 +151,7 @@ export default function Thongke() {
                         transition: 'height 0.4s',
                       }}
                     />
-                    <div style={{ fontSize: 11, color: '#666', marginTop: 6, fontWeight: 600 }}>T{i + 1}</div>
+                    <div style={{ fontSize: 16, color: '#666', marginTop: 6, fontWeight: 600 }}>T{i + 1}</div>
                   </div>
                 ))}
               </div>
@@ -197,8 +197,8 @@ export default function Thongke() {
                     <div style={{ width: 28, height: 28, borderRadius: '50%', background: COLORS.primary, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 13, flexShrink: 0 }}>{i + 1}</div>
                     <img src={p.anh_sanpham} alt="" style={{ width: 44, height: 44, borderRadius: 6, objectFit: 'cover' }} />
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.ten_san_pham}</div>
-                      <div style={{ fontSize: 12, color: '#888' }}>{formatVND(p.gia)}</div>
+                      <div style={{ fontSize: 20, fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.ten_san_pham}</div>
+                      <div style={{ fontSize: 18, color: '#888' }}>{formatVND(p.gia)}</div>
                     </div>
                     <div style={{ background: '#eef3ff', color: COLORS.primary, padding: '4px 10px', borderRadius: 12, fontSize: 12, fontWeight: 700 }}>x{p.total_quantity}</div>
                   </div>
@@ -225,12 +225,12 @@ export default function Thongke() {
                     {recentOrders.map((o) => {
                       const st = STATUS_MAP[o.trang_thai] || { label: 'N/A', color: '#888' };
                       return (
-                        <tr key={o.ma_don_hang} style={{ fontSize: 13 }}>
+                        <tr key={o.ma_don_hang} style={{ fontSize: 20 }}>
                           <td>#{o.ma_don_hang}</td>
                           <td>{o.ten_khach}</td>
                           <td>{(o.ngay_dat_hang || '').slice(0, 10)}</td>
                           <td style={{ fontWeight: 600 }}>{formatVND(o.tong_tien)}</td>
-                          <td><span style={{ background: st.color, color: '#fff', padding: '3px 8px', borderRadius: 12, fontSize: 11 }}>{st.label}</span></td>
+                          <td><span style={{ background: st.color, color: '#fff', padding: '3px 8px', borderRadius: 12, fontSize: 18 }}>{st.label}</span></td>
                         </tr>
                       );
                     })}

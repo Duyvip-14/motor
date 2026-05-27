@@ -17,5 +17,9 @@
   "devDependencies": {
     "concurrently": "^8.2.2",
     "cross-env": "^7.0.3"
+  },
+  "dependencies": {
+    "minio": "^8.0.7",
+    "multer": "^2.1.1"
   }
 }
