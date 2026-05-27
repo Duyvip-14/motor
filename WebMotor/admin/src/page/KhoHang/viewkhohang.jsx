@@ -13,13 +13,20 @@ export default function Viewkhohang() {
       .then((resq)=> setData({...resq.data[0]}));
     },[ma_kho_hang]);
 
+    // Xử lý URL ảnh: MinIO URL hoặc path local
+    const getImageUrl = (url) => {
+        if (!url) return '/Images/default.jpg';
+        if (url.startsWith('http')) return url;
+        return `http://localhost:5000${url}`;
+    };
+
   return (
     <div>
         <BackButton />
         <h3 class="mb-0">Thông tin kho hàng</h3>
     <hr />
     <div className='row'>
-    <img style={{borderRadius: '10px', marginLeft: '10px'}}  src={khohang.anh_sanpham}  width='150' height='180' class="img img-responsive" />
+    <img style={{borderRadius: '10px', marginLeft: '10px'}}  src={getImageUrl(khohang.anh_sanpham)}  width='150' height='180' class="img img-responsive" />
     </div>
     <div class="row">
         <div class="col mb-3">

@@ -25,7 +25,7 @@ export default function Createkhohang() {
 
     const handleInputChange = (e) =>{
       const{name, value} = e.target;
-      setState({...state,[name]:value});
+      setState(prev => ({...prev,[name]:value}));
     }
 
 
@@ -66,7 +66,7 @@ export default function Createkhohang() {
                     label="Ảnh sản phẩm"
                     name="anh_sanpham"
                     value={anh_sanpham}
-                    onUploaded={(url) => setState({...state, anh_sanpham: url})}
+                    onUploaded={(url) => setState(prev => ({...prev, anh_sanpham: url}))}
                 />
             </div>
         </div>

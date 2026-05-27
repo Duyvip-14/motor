@@ -24,29 +24,39 @@ export default function Editkhohang() {
   
     useEffect(()=>{
       axios.get(`http://localhost:5000/api/getkhohang/${ma_kho_hang}`)
-      .then((resp) => setState({...resp.data[0]}));
-      console.log(state)
+      .then((resp) => {
+        const data = resp.data[0];
+        // Format ngày về yyyy-mm-dd cho input type="date"
+        if (data.ngay_san_xuat) {
+          data.ngay_san_xuat = data.ngay_san_xuat.slice(0, 10);
+        }
+        setState({...data});
+      });
     },[ma_kho_hang]);
     
     const handleInputChange = (e) =>{
       const{name, value} = e.target;
-      setState({...state,[name]:value});
+      setState(prev => ({...prev,[name]:value}));
     }
 
 
     
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if(!ten_san_pham || !ngay_san_xuat || !so_luong || !mau_sac){
             toast.error("Vui lòng nhập đủ thông tin ")
         } else{
             if(window.confirm("Bạn có muốn cập nhật thông tin  ?")){
-                axios.put(`http://localhost:5000/api/updatekhohang/${ma_kho_hang}`,{
-                    ten_san_pham,ngay_san_xuat,so_luong,mau_sac,kich_co,anh_sanpham
-                }).then(()=> {setState({ ten_san_pham:"",ngay_san_xuat:"",so_luong:"", mau_sac:"",kich_co:"",anh_sanpham:""})})
-                .catch((err) => toast.error(err.response.data));
-                toast.success("Sửa sản phẩm thành công !")
-                setTimeout(() => navigate("/Indexkhohang"),500);
+                try {
+                    await axios.put(`http://localhost:5000/api/updatekhohang/${ma_kho_hang}`,{
+                        ten_san_pham,ngay_san_xuat,so_luong,mau_sac,kich_co,anh_sanpham
+                    });
+                    toast.success("Sửa sản phẩm thành công !");
+                    navigate("/Indexkhohang");
+                } catch (err) {
+                    console.error("Lỗi cập nhật kho hàng:", err);
+                    toast.error(err.response?.data || "Lỗi khi cập nhật!");
+                }
             }
         }
     }
@@ -89,7 +99,7 @@ export default function Editkhohang() {
                     label="Ảnh sản phẩm"
                     name="anh_sanpham"
                     value={anh_sanpham}
-                    onUploaded={(url) => setState({...state, anh_sanpham: url})}
+                    onUploaded={(url) => setState(prev => ({...prev, anh_sanpham: url}))}
                 />
               </div>
               

@@ -58,6 +58,13 @@ export default function Indexkhohang() {
             }
         }
 
+    // Xử lý URL ảnh: nếu đã là URL MinIO thì dùng nguyên, nếu là path local thì trỏ về backend
+    const getImageUrl = (url) => {
+        if (!url) return '/Images/default.jpg';
+        if (url.startsWith('http')) return url; // URL MinIO hoặc URL đầy đủ
+        return `http://localhost:5000${url}`; // Path local cũ
+    };
+
   return (
     <div>
       <div class="card shadow mb-4">
@@ -112,7 +119,7 @@ export default function Indexkhohang() {
                             return( 
                             <tr key={item.ma_kho_hang}>
                                 <td>{index+1}</td>
-                                <td><img style={{borderRadius: '5px'}} src={item.anh_sanpham} width='60' height='60' className="img img-responsive" /></td>
+                                <td><img style={{borderRadius: '5px'}} src={getImageUrl(item.anh_sanpham)} width='60' height='60' className="img img-responsive" /></td>
                                 <td>{item.ten_san_pham}</td>
                                 <td>{item.ngay_san_xuat.slice(0, 10)}</td>
                                 <td>{item.so_luong}</td>

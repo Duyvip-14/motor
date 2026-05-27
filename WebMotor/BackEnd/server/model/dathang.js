@@ -120,7 +120,7 @@ const Order = {
                                     });
                                 }
 
-                                // Bước 4: trừ tồn kho từng item
+                                // Bước 4: trừ tồn kho san_pham từng item
                                 const stockUpdates = chi_tiet_don_hang.map(item => new Promise((resolve, reject) => {
                                     const sqlUpdate = `UPDATE san_pham SET soluong = soluong - ? WHERE ma_san_pham = ? AND soluong >= ?`;
                                     connection.query(sqlUpdate, [item.so_luong, item.ma_san_pham, item.so_luong], (err, res) => {
@@ -131,6 +131,34 @@ const Order = {
                                 }));
 
                                 Promise.all(stockUpdates)
+                                    .then(() => {
+                                        // Bước 5: trừ tồn kho kho_hang (FIFO - trừ từ kho cũ nhất)
+                                        const warehouseUpdates = chi_tiet_don_hang.map(item => new Promise((resolve, reject) => {
+                                            let remaining = parseInt(item.so_luong);
+                                            const sqlGetKho = `SELECT ma_kho_hang, so_luong FROM kho_hang WHERE ma_san_pham = ? AND so_luong > 0 ORDER BY ma_kho_hang ASC`;
+                                            connection.query(sqlGetKho, [item.ma_san_pham], (err, khoRows) => {
+                                                if (err) return reject(err);
+                                                if (!khoRows || khoRows.length === 0) return resolve(); // Không có kho thì bỏ qua
+
+                                                const khoUpdates = [];
+                                                for (const kho of khoRows) {
+                                                    if (remaining <= 0) break;
+                                                    const deduct = Math.min(remaining, kho.so_luong);
+                                                    khoUpdates.push(new Promise((res, rej) => {
+                                                        connection.query(
+                                                            `UPDATE kho_hang SET so_luong = so_luong - ? WHERE ma_kho_hang = ?`,
+                                                            [deduct, kho.ma_kho_hang],
+                                                            (err) => err ? rej(err) : res()
+                                                        );
+                                                    }));
+                                                    remaining -= deduct;
+                                                }
+                                                Promise.all(khoUpdates).then(() => resolve()).catch(reject);
+                                            });
+                                        }));
+
+                                        return Promise.all(warehouseUpdates);
+                                    })
                                     .then(() => {
                                         connection.commit((err) => {
                                             if (err) {
