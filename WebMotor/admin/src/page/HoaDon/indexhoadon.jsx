@@ -131,7 +131,7 @@ export default function Indexhoadon() {
                     <option value="1">Chưa duyệt</option>
                     <option value="2">Đã duyệt</option>
                     <option value="3">Đang Giao</option>
-                    <option value="3">Đã giao thành công</option>
+                    <option value="4">Đã giao thành công</option>
                 </select>
                 </div>
 
