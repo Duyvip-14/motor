@@ -215,8 +215,63 @@ export default function Cartpage() {
                 localStorage.setItem("voucher_sale", JSON.stringify(vocher));
                 LoadData();
     }
+
+    else if(paymentMethod === "ZaloPay"){
+        console.log('[ZaloPay] Bắt đầu thanh toán, tong_tien =', tong_tien);
+        const orderData = {
+            ma_khach_hang: user.id,
+            ngay_dat_hang: new Date().toISOString().slice(0, 10),
+            tong_tien: tong_tien,
+            trang_thai: 1,
+            ten_khach: ten_khach_hang,
+            dia_chi: `${dia_chi}, ${phuong_xa}, ${quan_huyen}, ${tinh_thanh}`,
+            ghi_chu: ghi_chu,
+            sdt: sdt,
+            loai_thanh_toan: paymentMethod,
+            trang_thai_thanh_toan: 2,
+            chi_tiet_don_hang: list.map(item => ({
+              ma_san_pham: Number(item.id),
+              ten_san_pham: item.name,
+              so_luong: item.quantity,
+              gia: item.price,
+              kich_co: item.size,
+              mau_sac: item.color,
+              anh_sanpham: item.img
+            }))
+        }
+
+        localStorage.setItem("pending_order", JSON.stringify(orderData));
+        console.log('[ZaloPay] Đã lưu pending_order, đang gọi API...');
+
+        axios.post('http://localhost:5000/api/zalopay_create_payment_url', {
+            amount: tong_tien,
+            redirectUrl: `${window.location.origin}/zalopay-return`
+        })
+        .then(res => {
+            const paymentUrl = res.data.url;
+            console.log('[ZaloPay] API response:', res.data);
+            if (paymentUrl) {
+                localStorage.setItem("zalopay_app_trans_id", res.data.app_trans_id);
+                console.log('[ZaloPay] Đang redirect đến:', paymentUrl);
+                window.location.href = paymentUrl;
+            } else {
+                alert('Không tạo được link thanh toán ZaloPay');
+            }
+        })
+        .catch(error => {
+            console.error('[ZaloPay] Lỗi API:', error);
+            alert('Lỗi khi gọi API thanh toán ZaloPay');
+        });
+
+        const vocher = {coupon_name: "novoucher", value: 0}
+        localStorage.setItem("coupons", JSON.stringify([]));
+        const savedCoupons = JSON.parse(localStorage.getItem('coupons')) || [];
+        setCoupons(savedCoupons);
+        localStorage.setItem("voucher_sale", JSON.stringify(vocher));
+        LoadData();
+    }
   }
-}    
+}
     useEffect(() => {
         const tongTienElement = document.querySelector('.btn-pay--price');
         if (tongTienElement) {
@@ -257,8 +312,8 @@ export default function Cartpage() {
         setUpdateTotalTrigger(prev => prev + 1);
     };
     
-    const handlePaymentChange = (e) => {
-        setSelectedPayment(e.target.value); // Cập nhật giá trị state
+    const handlePaymentChange = (paymentMethod) => {
+        setSelectedPayment(paymentMethod); // Cập nhật giá trị state
     };
 
   return (
@@ -335,26 +390,28 @@ export default function Cartpage() {
                         <div className="payments">
                             <h2 className="payments">Hình thức thanh toán
                             </h2>
-                            <div className={`payments-item ${(selectedPayment === "BuyLate") ? "active" : ""}`}>
+                            <div className={`payments-item ${(selectedPayment === "BuyLate") ? "active" : ""}`} onClick={() => handlePaymentChange("BuyLate")}>
                                     <input
                                     type="radio"
                                     className="check"
                                     name="paymentMethod" // Group name cho các radio
                                     value="BuyLate"
-                                    onClick={handlePaymentChange}
+                                    checked={selectedPayment === "BuyLate"}
+                                    onChange={() => handlePaymentChange("BuyLate")}
                                     />
                                     <img style={{height:'25px',width:'25px',marginRight:"60px"}} src="https://sohala.vn/upload/news/thanh-toan-khi-nhan-hang-6272.jpg" alt="" />
                                     <p className="payments-item__text">Thanh toán sau</p>
                                 </div>
 
                                 {/* VNPay */}
-                                <div className={`payments-item ${(selectedPayment === "VnPay") ? "active" : ""}`}>
+                                <div className={`payments-item ${(selectedPayment === "VnPay") ? "active" : ""}`} onClick={() => handlePaymentChange("VnPay")}>
                                     <input
                                     type="radio"
                                     className="check"
                                     name="paymentMethod" // Group name phải giống nhau
                                     value="VnPay"
-                                    onClick={handlePaymentChange}
+                                    checked={selectedPayment === "VnPay"}
+                                    onChange={() => handlePaymentChange("VnPay")}
                                     />
                                     <img
                                     style={{ width: "55px" }}
@@ -364,6 +421,27 @@ export default function Cartpage() {
                                     <div className="payments-item__text">
                                     <p>Thẻ ATM / Internet Banking</p>
                                     <p>Thẻ tín dụng (Credit card) / Thẻ ghi nợ (Debit card) VNPay QR</p>
+                                    </div>
+                                </div>
+
+                                {/* ZaloPay */}
+                                <div className={`payments-item ${(selectedPayment === "ZaloPay") ? "active" : ""}`} onClick={() => handlePaymentChange("ZaloPay")}>
+                                    <input
+                                    type="radio"
+                                    className="check"
+                                    name="paymentMethod"
+                                    value="ZaloPay"
+                                    checked={selectedPayment === "ZaloPay"}
+                                    onChange={() => handlePaymentChange("ZaloPay")}
+                                    />
+                                    <img
+                                    style={{ width: "55px" }}
+                                    src="https://stc-zaloprox.zalopay.net/ehCart/img/zlp-logo.png"
+                                    alt="ZaloPay"
+                                    />
+                                    <div className="payments-item__text">
+                                    <p>Ví ZaloPay</p>
+                                    <p>Thanh toán qua ứng dụng ZaloPay</p>
                                     </div>
                                 </div>
                             <p style={{paddingLeft: '5px'}}>Nếu bạn không hài lòng với sản phẩm của chúng tôi? Bạn hoàn toàn có thể trả lại sản phẩm. Tìm hiểu thêm <a style={{fontWeight:'700'}} href="">tại đây</a>.</p>
