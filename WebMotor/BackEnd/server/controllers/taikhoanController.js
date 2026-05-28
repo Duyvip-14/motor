@@ -25,6 +25,7 @@ exports.loginAccount = (req, res) => {
         const token = jwt.sign(
             {
                 id_tai_khoan: user.id_tai_khoan,
+                ma_khach_hang: user.ma_khach_hang,
                 ten_nguoi_dung: user.ten_nguoi_dung,
                 email: user.email,
             },
@@ -38,6 +39,7 @@ exports.loginAccount = (req, res) => {
             token: token,
             user: {
                 id_tai_khoan: user.id_tai_khoan,
+                ma_khach_hang: user.ma_khach_hang,
                 ten_nguoi_dung: user.ten_nguoi_dung,
                 email: user.email,
             },

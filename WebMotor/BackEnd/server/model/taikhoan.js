@@ -35,7 +35,13 @@ const Account = {
     login: (email, mat_khau, callback) => {
         console.log("Email nhận từ client:", email);
     
-        const sqlSelect = `SELECT * FROM tai_khoan WHERE email = ?`;
+        const sqlSelect = `
+            SELECT tk.*, kh.ma_khach_hang
+            FROM tai_khoan tk
+            LEFT JOIN khach_hang kh ON kh.email = tk.email
+            WHERE tk.email = ?
+            LIMIT 1
+        `;
         db.query(sqlSelect, [email], (error, results) => {
             if (error) {
                 console.log("Lỗi khi query:", error);

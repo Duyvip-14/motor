@@ -1,11 +1,7 @@
 import React, { useState } from "react";
 
 const PRODUCT_TYPES = [
-    { value: 'set', label: 'Set đồ giáp bảo hộ (áo + quần)', image: '/Images/dobaoho.jpg', sizeType: 'apparel' },
-    { value: 'jacket', label: 'Áo giáp bảo hộ', image: '/Images/dobaoho.jpg', sizeType: 'apparel' },
-    { value: 'pants', label: 'Quần giáp bảo hộ', image: '/Images/dobaoho.jpg', sizeType: 'apparel' },
-    { value: 'gloves', label: 'Găng tay biker', image: '/Images/dobaoho.jpg', sizeType: 'gloves' },
-    { value: 'boots', label: 'Giày biker', image: '/Images/dobaoho.jpg', sizeType: 'boots' },
+    { value: 'quanao', label: 'Quần Áo bảo hộ', image: '/Images/dobaoho.jpg', sizeType: 'apparel' },
 ];
 
 const BODY_TYPES = [
@@ -75,22 +71,19 @@ export default function Chonsize() {
                     <div style={{ position: 'relative', marginBottom: 20 }}>
                         <select
                             value={productType}
-                            onChange={(e) => setProductType(e.target.value)}
+                            disabled
                             style={{
                                 width: '100%', padding: '12px 40px 12px 16px',
                                 borderRadius: 12, border: `1px solid ${COLORS.border}`,
-                                fontSize: 14, fontWeight: 500, background: '#fff',
-                                cursor: 'pointer', appearance: 'none', outline: 'none',
+                                fontSize: 14, fontWeight: 500, background: '#f5f5f5',
+                                cursor: 'not-allowed', appearance: 'none', outline: 'none',
+                                color: '#666'
                             }}
                         >
                             {PRODUCT_TYPES.map(p => (
                                 <option key={p.value} value={p.value}>{p.label}</option>
                             ))}
                         </select>
-                        <i className="fa-solid fa-chevron-down" style={{
-                            position: 'absolute', right: 16, top: '50%',
-                            transform: 'translateY(-50%)', pointerEvents: 'none', color: '#666',
-                        }} />
                     </div>
                     <div style={{ background: COLORS.soft, borderRadius: 12, padding: 16, textAlign: 'center' }}>
                         <img

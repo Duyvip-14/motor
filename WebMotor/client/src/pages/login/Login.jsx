@@ -28,7 +28,7 @@ const Login = () => {
       if (response.data && response.data.user) {
 
         const user = response.data.user;
-        updateUser({ id: user.id_tai_khoan, name: user.ten_nguoi_dung, username: user.email });
+        updateUser({ id: user.id_tai_khoan, customerId: user.ma_khach_hang, name: user.ten_nguoi_dung, username: user.email });
         alert(`Xin chào ${user.ten_nguoi_dung}!`);
         navigate('/');
 

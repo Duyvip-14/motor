@@ -15,6 +15,14 @@ exports.getBillById = (req, res) => {
     });
 };
 
+exports.getBillInfoById = (req, res) => {
+    const { ma_hoa_don } = req.params;
+    BillInput.getById(ma_hoa_don, (err, result) => {
+        if (err) return res.status(500).json({ message: 'Lỗi lấy hóa đơn nhập' });
+        res.json(result);
+    });
+};
+
 exports.createBillIP = (req, res) => {
     BillInput.create(req.body, (err, result) => {
         if (err) return res.status(500).json({ message: err.message || 'Lỗi tạo hóa đơn nhập' });
@@ -35,5 +43,13 @@ exports.deleteBillIP = (req, res) => {
     BillInput.delete(ma_hoa_don, (err, result) => {
         if (err) return res.status(500).json({ message: err.message || 'Lỗi xóa hóa đơn nhập' });
         res.json({ message: 'Xóa hóa đơn nhập thành công' });
+    });
+};
+
+exports.updateBillInfo = (req, res) => {
+    const { ma_hoa_don } = req.params;
+    BillInput.updateInfo(ma_hoa_don, req.body, (err, result) => {
+        if (err) return res.status(500).json({ message: err.message || 'Lỗi cập nhật hóa đơn nhập' });
+        res.json({ message: 'Cập nhật hóa đơn nhập thành công', result });
     });
 };

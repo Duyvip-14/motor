@@ -22,7 +22,7 @@ export default function Indexhoadon() {
 
     const loadData =  async() =>{
         const response = await axios.get("http://localhost:5000/api/getalldonhang");
-        setData(response.data);
+        setData(response.data.reverse());
 };
 
         useEffect(()=>{
@@ -40,8 +40,17 @@ export default function Indexhoadon() {
         };
 
 
-        const deleteDH = (ma_don_hang) =>{
-            if(window.confirm("Bạn có muốn xóa danh mục này không ?")){
+        const deleteDH = (ma_don_hang, trang_thai) =>{
+            if(parseInt(trang_thai) === 4){
+                toast.warning('Không thể xóa đơn hàng đã giao thành công!', {
+                    position: "top-right",
+                    autoClose: 3000,
+                    theme: "light",
+                    transition: Flip,
+                });
+                return;
+            }
+            if(window.confirm("Bạn có muốn xóa đơn hàng này không ?")){
                 axios.delete(`http://localhost:5000/api/deletedonhang/${ma_don_hang}`);
                 toast.success('Xóa đơn hàng thành công !', {
                     position: "top-right",
@@ -55,6 +64,18 @@ export default function Indexhoadon() {
                     transition: Flip,
                     });
                 setTimeout(()=>loadData(),500);
+            }
+        }
+
+        const handleEdit = (e, trang_thai) => {
+            if(parseInt(trang_thai) === 4){
+                e.preventDefault();
+                toast.warning('Không thể sửa đơn hàng đã giao thành công!', {
+                    position: "top-right",
+                    autoClose: 3000,
+                    theme: "light",
+                    transition: Flip,
+                });
             }
         }
 
@@ -193,9 +214,9 @@ export default function Indexhoadon() {
                             }
                         </td>
                         <td><Link to={`/Viewctdh/${item.ma_don_hang}`} type="button" class="btn btn-primary">Xem</Link></td>
-                        <td><Link to={`/Updatedh/${item.ma_don_hang}`} type="button" class="btn btn-warning">Duyệt</Link></td>
+                        <td><Link to={`/Updatedh/${item.ma_don_hang}`} type="button" class="btn btn-warning" onClick={(e) => handleEdit(e, item.trang_thai)}>Duyệt</Link></td>
                         <td>
-                                <button type='submit' onClick={()=> deleteDH(item.ma_don_hang)} class='btn btn-danger'>Xóa</button>
+                                <button type='submit' onClick={()=> deleteDH(item.ma_don_hang, item.trang_thai)} class='btn btn-danger'>Xóa</button>
                     
                         </td>
 

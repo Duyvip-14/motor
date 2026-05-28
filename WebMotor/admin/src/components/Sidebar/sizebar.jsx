@@ -66,6 +66,12 @@ export default function Sizebar() {
                 </li>
 
                 <li className="nav-item">
+                    <Link className="nav-link" to="/Indexbaohanh">
+                        <i className="fas fa-tools"></i>
+                        <span>Bảo hành</span></Link>
+                </li>
+
+                <li className="nav-item">
                     <Link className="nav-link" to="/Indexkh">
                         <i className="fas fa-user-friends"></i>
                         <span>Khách hàng</span></Link>

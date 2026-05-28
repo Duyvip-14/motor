@@ -23,6 +23,14 @@ const BillInput = {
         });
     },
 
+    getById: (ma_hoa_don, callback) => {
+        const sqlGet = "SELECT * FROM hoa_don_nhap WHERE ma_hoa_don = ?";
+        db.query(sqlGet, [ma_hoa_don], (error, result) => {
+            if (error) return callback(error);
+            callback(null, result);
+        });
+    },
+
     searchByNCC: (searchTerm, callback) => {
         const sqlSearch = "SELECT * FROM hoa_don_nhap WHERE ten_ncc LIKE ? OR sdt LIKE ? ORDER BY ma_hoa_don DESC";
         const term = `%${searchTerm}%`;
@@ -54,13 +62,22 @@ const BillInput = {
                             });
                         }
 
-                        const updates = details.map(d => new Promise((resolve, reject) => {
-                            connection.query(
-                                'UPDATE san_pham SET soluong = GREATEST(soluong - ?, 0) WHERE ma_san_pham = ?',
-                                [d.so_luong, d.ma_san_pham],
-                                (e) => e ? reject(e) : resolve()
-                            );
-                        }));
+                        const updates = details.flatMap(d => [
+                            new Promise((resolve, reject) => {
+                                connection.query(
+                                    'UPDATE san_pham SET soluong = GREATEST(soluong - ?, 0) WHERE ma_san_pham = ?',
+                                    [d.so_luong, d.ma_san_pham],
+                                    (e) => e ? reject(e) : resolve()
+                                );
+                            }),
+                            new Promise((resolve, reject) => {
+                                connection.query(
+                                    'UPDATE kho_hang SET so_luong = GREATEST(so_luong - ?, 0) WHERE ma_san_pham = ?',
+                                    [d.so_luong, d.ma_san_pham],
+                                    (e) => e ? reject(e) : resolve()
+                                );
+                            })
+                        ]);
 
                         Promise.all(updates)
                             .then(() => {
@@ -163,14 +180,33 @@ const BillInput = {
                                 });
                             }
 
-                            // Cộng tồn kho
-                            const stockUpdates = chi_tiet.map(it => new Promise((resolve, reject) => {
-                                connection.query(
-                                    'UPDATE san_pham SET soluong = soluong + ? WHERE ma_san_pham = ?',
-                                    [it.so_luong, it.ma_san_pham],
-                                    (e) => e ? reject(e) : resolve()
-                                );
-                            }));
+                            // Cộng tồn kho sản phẩm và kho hàng cho từng dòng nhập.
+                            const stockUpdates = chi_tiet.flatMap(it => [
+                                new Promise((resolve, reject) => {
+                                    connection.query(
+                                        'UPDATE san_pham SET soluong = soluong + ? WHERE ma_san_pham = ?',
+                                        [it.so_luong, it.ma_san_pham],
+                                        (e) => e ? reject(e) : resolve()
+                                    );
+                                }),
+                                new Promise((resolve, reject) => {
+                                    connection.query('SELECT ma_kho_hang FROM kho_hang WHERE ma_san_pham = ? LIMIT 1', [it.ma_san_pham], (e, rows) => {
+                                        if (e) return reject(e);
+                                        if (rows.length > 0) {
+                                            return connection.query(
+                                                `UPDATE kho_hang SET so_luong = so_luong + ?, ten_san_pham = ?, ngay_san_xuat = ?, mau_sac = ?, kich_co = ?, anh_sanpham = ? WHERE ma_kho_hang = ?`,
+                                                [it.so_luong, it.ten_san_pham, ngay_nhap, it.mau_sac || '', it.kich_co || '', it.anh_san_pham || '', rows[0].ma_kho_hang],
+                                                (err) => err ? reject(err) : resolve()
+                                            );
+                                        }
+                                        connection.query(
+                                            `INSERT INTO kho_hang (ma_san_pham, ten_san_pham, ngay_san_xuat, so_luong, mau_sac, kich_co, anh_sanpham) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+                                            [it.ma_san_pham, it.ten_san_pham, ngay_nhap, it.so_luong, it.mau_sac || '', it.kich_co || '', it.anh_san_pham || ''],
+                                            (err) => err ? reject(err) : resolve()
+                                        );
+                                    });
+                                })
+                            ]);
 
                             Promise.all(stockUpdates)
                                 .then(() => {
@@ -195,6 +231,19 @@ const BillInput = {
                     }
                 );
             });
+        });
+    },
+
+    updateInfo: (ma_hoa_don, data, callback) => {
+        const { ngay_nhap, ten_ncc, sdt, ma_nhan_vien, email, dia_chi } = data;
+        const sqlUpdate = `
+            UPDATE hoa_don_nhap
+            SET ngay_nhap = ?, ten_ncc = ?, sdt = ?, ma_nhan_vien = ?, email = ?, dia_chi = ?
+            WHERE ma_hoa_don = ?
+        `;
+        db.query(sqlUpdate, [ngay_nhap, ten_ncc, sdt, ma_nhan_vien || null, email, dia_chi, ma_hoa_don], (error, result) => {
+            if (error) return callback(error);
+            callback(null, result);
         });
     }
 };

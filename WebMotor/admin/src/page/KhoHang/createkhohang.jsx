@@ -49,7 +49,7 @@ export default function Createkhohang() {
       <h3 className="mb-0">Thêm sản phẩm vào kho</h3>
     <hr />
     <form onSubmit={handleSubmit}  enctype="multipart/form-data">
-    
+
         <div className="row mb-3">
 
             <div className="col">
@@ -58,7 +58,7 @@ export default function Createkhohang() {
             <div className="col">
                 <input type="text" name="ten_san_pham" onChange={handleInputChange} value={ten_san_pham} className="form-control" placeholder="Tên sản phẩm "/>
             </div>
-            
+
         </div>
         <div className='row mb-3'>
         <div className="col">

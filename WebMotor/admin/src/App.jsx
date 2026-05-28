@@ -32,7 +32,12 @@ import Viewhoadon from "./page/HoaDon/viewhoadon";
 import TaiKhoan from "./page/TaiKhoan/indextk";
 import Createhdn from "./page/HoaDonNhap/createhoadon";
 import Viewhoadonnhap from "./page/HoaDonNhap/viewhoadon";
+import Edithoadonnhap from "./page/HoaDonNhap/edithoadon";
 import EditHD from "./page/HoaDon/edithoadon";
+import Indexbaohanh from "./page/BaoHanh/indexbaohanh";
+import Createbaohanh from "./page/BaoHanh/createbaohanh";
+import Editbaohanh from "./page/BaoHanh/editbaohanh";
+import Viewbaohanh from "./page/BaoHanh/viewbaohanh";
 
 export default function App() {
   return (
@@ -91,7 +96,13 @@ export default function App() {
               <Route path="/Viewctdh/:ma_don_hang" element={<Viewhoadon/>} />
               <Route path="/Updatedh/:ma_don_hang" element={<EditHD/>} />
               <Route path="/Viewcthdn/:ma_hoa_don" element={<Viewhoadonnhap/>} />
-              
+              <Route path="/Updatehdn/:ma_hoa_don" element={<Edithoadonnhap/>} />
+
+              <Route path="/Indexbaohanh" element={<Indexbaohanh/>} />
+              <Route path="/Createbaohanh" element={<Createbaohanh/>} />
+              <Route path="/Updatebaohanh/:ma_bao_hanh" element={<Editbaohanh/>} />
+              <Route path="/Viewbaohanh/:ma_bao_hanh" element={<Viewbaohanh/>} />
+               
               <Route path="/Indextaikhoan" element={<TaiKhoan/>} />
 
               <Route path="/CreateHDN" element={<Createhdn/>} />

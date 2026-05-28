@@ -2,6 +2,20 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
+const { execSync } = require('child_process');
+
+// Tự kill process cũ chiếm port 5000
+try {
+  const result = execSync('netstat -ano | findstr :5000 | findstr LISTENING', { encoding: 'utf8' });
+  const lines = result.trim().split('\n');
+  lines.forEach(line => {
+    const pid = line.trim().split(/\s+/).pop();
+    if (pid && !isNaN(pid)) {
+      try { execSync(`taskkill /PID ${pid} /F`, { stdio: 'ignore' }); } catch {}
+    }
+  });
+} catch {}
+
 const app = express();
 
 // Export router
@@ -18,6 +32,7 @@ const taikhoanRoutes = require('./routes/taikhoanRoute');
 const dathangRoutes = require('./routes/dathangRoute');
 const vnpayRoutes = require('./routes/vnpayRoute');
 const zalopayRoutes = require('./routes/zalopayRoute');
+const baohanhRoutes = require('./routes/baohanhRoute');
 const uploadRoutes = require('./routes/uploadRoute');
 
 app.use(cors());
@@ -41,6 +56,7 @@ app.use(taikhoanRoutes);
 app.use(dathangRoutes);
 app.use(vnpayRoutes);
 app.use(zalopayRoutes);
+app.use(baohanhRoutes);
 app.use(uploadRoutes);
 
 

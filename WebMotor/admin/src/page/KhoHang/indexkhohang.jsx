@@ -9,6 +9,7 @@ export default function Indexkhohang() {
     const [data ,setData] = useState([]);
         const [currentPage, setCurrentPage] = useState(1);
         const [itemsPerPage, setItemsPerPage] = useState(5);
+        const [previewImg, setPreviewImg] = useState(null);
     
         const indexOfLastItem = currentPage * itemsPerPage;
         const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -66,6 +67,7 @@ export default function Indexkhohang() {
     };
 
   return (
+    <>
     <div>
       <div class="card shadow mb-4">
         <div class="d-flex align-items-center justify-content-between card-header py-3">
@@ -119,7 +121,15 @@ export default function Indexkhohang() {
                             return( 
                             <tr key={item.ma_kho_hang}>
                                 <td>{index+1}</td>
-                                <td><img style={{borderRadius: '5px'}} src={getImageUrl(item.anh_sanpham)} width='60' height='60' className="img img-responsive" /></td>
+                                <td>
+                                    <img
+                                        style={{borderRadius: '5px', cursor: 'pointer'}}
+                                        src={getImageUrl(item.anh_sanpham)}
+                                        width='60' height='60'
+                                        className="img img-responsive"
+                                        onClick={() => setPreviewImg(getImageUrl(item.anh_sanpham))}
+                                    />
+                                </td>
                                 <td>{item.ten_san_pham}</td>
                                 <td>{item.ngay_san_xuat.slice(0, 10)}</td>
                                 <td>{item.so_luong}</td>
@@ -139,5 +149,20 @@ export default function Indexkhohang() {
         </div>
     </div>
     </div>
+
+    {/* Modal xem ảnh lớn */}
+    {previewImg && (
+        <div onClick={() => setPreviewImg(null)} style={{
+            position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
+            background: 'rgba(0,0,0,0.7)', display: 'flex', justifyContent: 'center',
+            alignItems: 'center', zIndex: 9999, cursor: 'pointer'
+        }}>
+            <img src={previewImg} alt="Preview" style={{
+                maxWidth: '80%', maxHeight: '80%', borderRadius: '8px',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.5)'
+            }} />
+        </div>
+    )}
+    </>
   )
 }

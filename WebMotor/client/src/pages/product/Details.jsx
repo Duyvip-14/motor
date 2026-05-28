@@ -15,10 +15,37 @@ export default function Details() {
     const [sanPhamSoSanh, setSanPhamSoSanh] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
     const [quantity, setQuantity] = useState(1);
+    const [qtyError, setQtyError] = useState('');
 
     const maxQty = parseInt(sanpham.soluong) || 0;
-    const handleDecrease = () => setQuantity(q => Math.max(1, q - 1));
-    const handleIncrease = () => setQuantity(q => (maxQty > 0 ? Math.min(maxQty, q + 1) : q + 1));
+    const handleDecrease = () => {
+        setQtyError('');
+        setQuantity(q => Math.max(1, q - 1));
+    };
+    const handleIncrease = () => {
+        setQtyError('');
+        setQuantity(q => q + 1);
+    };
+
+    const handleQuantityChange = (e) => {
+        let val = e.target.value;
+        if (val === '') {
+            setQuantity('');
+            return;
+        }
+        val = parseInt(val);
+        if (isNaN(val)) return;
+
+        setQuantity(val);
+        setQtyError('');
+    };
+
+    const handleQuantityBlur = () => {
+        if (quantity === '' || quantity < 1) {
+            setQuantity(1);
+            setQtyError('');
+        }
+    };
 
     useEffect(() => {
         window.__detailCartQty = quantity;
@@ -132,12 +159,19 @@ export default function Details() {
                                 <div class="btn-size size-44 is-disabled">1250</div>
                                 </div>
 
+                            {qtyError && <p style={{ color: 'red', fontSize: '13px', marginBottom: '8px', marginTop: '-8px' }}>{qtyError}</p>}
                             <div class="product-single__actions">
                                 <div class="quantity">
 
                                     <button class="btn-decrease" onClick={handleDecrease} disabled={parseInt(sanpham.soluong) <= 0 || quantity <= 1}>-</button>
-                                    <span>{quantity}</span>
-                                    <button class="btn-increase" onClick={handleIncrease} disabled={parseInt(sanpham.soluong) <= 0 || quantity >= maxQty}>+</button>
+                                    <input 
+                                        type="number" 
+                                        value={quantity} 
+                                        onChange={handleQuantityChange}
+                                        onBlur={handleQuantityBlur}
+                                        style={{ width: '40px', textAlign: 'center', border: 'none', outline: 'none', background: 'transparent' }}
+                                    />
+                                    <button class="btn-increase" onClick={handleIncrease}>+</button>
                                 </div>
                                 {parseInt(sanpham.soluong) <= 0 ? (
                                     <div

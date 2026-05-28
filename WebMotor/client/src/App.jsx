@@ -13,6 +13,7 @@ import Buycoolmate from './components/Message/buycoolmate';
 import ScrollToTop from './until/scroll';
 import Odercart from './pages/cart/Odercart';
 import OrderTracking from './pages/cart/OrderTracking';
+import WarrantyHistory from './pages/cart/WarrantyHistory';
 import Register from './pages/login/Register';
 import Login from './pages/login/Login';
 import { UserProvider } from './until/userContext';
@@ -42,6 +43,7 @@ export default function App() {
         <Route path='/detail/:ma_san_pham' element={<Details/>}/>
         <Route path='/donhang' element={<Odercart/>}/>
         <Route path='/order-tracking' element={<OrderTracking/>}/>
+        <Route path='/baohanh' element={<WarrantyHistory/>}/>
         <Route path="/chatai" element={<ChatAIApp/>} />
         <Route path="/vnpay-return" element={<VnpayReturn />} />
         <Route path="/zalopay-return" element={<ZalopayReturn />} />

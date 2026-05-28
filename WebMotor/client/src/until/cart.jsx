@@ -32,7 +32,7 @@ function AddProduct() {
   }
 
 
-    $('.btn-addCart').click(function() {
+    $(document).off("click", ".btn-addCart").on("click", ".btn-addCart", function() {
       if ($(this).text() == "Thêm vào giỏ hàng") {
           var name = $(".content__heading").text();
           var img = $(".product-img__option-item.active img").attr("src");
@@ -41,7 +41,15 @@ function AddProduct() {
           var price = convertToNumber($(".content__price").text());
           var qty = parseInt(window.__detailCartQty, 10);
           if (!qty || qty < 1) {
-              qty = parseInt($(".quantity span").text(), 10) || 1;
+              qty = parseInt($(".quantity input").val() || $(".quantity span").text(), 10) || 1;
+          }
+
+          var maxQtyText = $(".product-quantity").first().text();
+          var maxQty = parseInt(maxQtyText, 10) || 0;
+
+          if (qty > maxQty) {
+              alert(`Số lượng chọn (${qty}) vượt quá số lượng trong kho (${maxQty})!`);
+              return;
           }
 
           // Lấy mã sản phẩm (ma_san_pham) từ URL trang chi tiết sản phẩm
@@ -190,6 +198,7 @@ function AddProduct() {
     
     return () => {
       $(document).off("click", ".btn--size");
+      $(document).off("click", ".btn-addCart");
     };
     
   },[]);

@@ -102,6 +102,7 @@ export default function IndexHDN() {
                     <thead>
                         <tr>
                             <th>STT</th>
+                            <th>Mã HĐ</th>
                             <th>Mã NV</th>
                             <th>Tên NCC</th>
                             <th>SĐT</th>
@@ -120,6 +121,7 @@ export default function IndexHDN() {
                     return(   
                     <tr key={item.ma_hoa_don}>
                         <td>{index+1}</td>
+                        <td>HDN{item.ma_hoa_don}</td>
                         <td>{item.ma_nhan_vien}</td>
                         <td>{item.ten_ncc}</td>
                         <td>{item.sdt}</td>
@@ -127,10 +129,10 @@ export default function IndexHDN() {
                         <td>{item.dia_chi}</td>
                         <td>{item.ngay_nhap.slice(0, 10)}</td>
                         <td>{formatCurrency(item.tong_tien)}</td>
-                        <td><Link to={`/Viewcthdn/${item.ma_hoa_don}`} type="button" class="btn btn-primary">Xem</Link></td>
-                        <td><a href="" class="btn btn-warning">Sửa</a></td>
+                        <td><Link to={`/Viewcthdn/${item.ma_hoa_don}`} type="button" className="btn btn-primary">Xem</Link></td>
+                        <td><Link to={`/Updatehdn/${item.ma_hoa_don}`} className="btn btn-warning">Sửa</Link></td>
                         <td>
-                                <button type='submit' onClick={()=> deleteDH(item.ma_hoa_don)} class='btn btn-danger'>Xóa</button>
+                                <button type='button' onClick={()=> deleteDH(item.ma_hoa_don)} className='btn btn-danger'>Xóa</button>
                     
                         </td>
                     </tr>)
